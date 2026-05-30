@@ -16,6 +16,7 @@
             --text-main: #333333;
             --text-muted: #666666;
             --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --danger: #e53935;
         }
         
         body { 
@@ -94,6 +95,7 @@
             margin-top: 10px;
         }
         button:hover { background: #20ba5a; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(37, 211, 102, 0.4); }
+        button:disabled { background: #cccccc; cursor: not-allowed; transform: none; box-shadow: none; }
         
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
         
@@ -131,6 +133,20 @@
         }
         .btn-join:hover { background: var(--primary-dark); }
         .btn-join::before { content: "💬 "; margin-right: 6px; }
+
+        /* Estilos de paginación y feedback profesional */
+        .pagination-container { text-align: center; margin-top: 30px; }
+        .btn-secondary { background: #fff; color: var(--primary-dark); border: 2px solid var(--primary-dark); box-shadow: none; }
+        .btn-secondary:hover { background: var(--light-bg); transform: translateY(-1px); box-shadow: var(--card-shadow); }
+        
+        /* Contenedor Toast para Notificaciones */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: 600; font-size: 0.95rem; animation: slideIn 0.3s forwards, fadeOut 0.3s 3.7s forwards; min-width: 250px; border-left: 5px solid #fff; }
+        .toast.success { border-left-color: var(--primary); }
+        .toast.error { border-left-color: var(--danger); }
+
+        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
         /* Estilos SEO extra */
         .faq-item { margin-bottom: 20px; }
@@ -209,7 +225,7 @@
                 <label for="descripcion">Descripción del Grupo (Ayuda al SEO)</label>
                 <textarea id="descripcion" rows="3" placeholder="Describe brevemente las reglas del grupo o de qué temas hablan para atraer a miembros interesados..."></textarea>
             </div>
-            <button type="submit">Publicar mi grupo gratis</button>
+            <button type="submit" id="submitBtn">Publicar mi grupo gratis</button>
         </form>
     </section>
 
@@ -217,6 +233,9 @@
         <h2 class="section-title">Grupos de WhatsApp Recientes</h2>
         <div class="grid" id="groupsContainer">
             <p>Cargando los grupos del directorio...</p>
+        </div>
+        <div class="pagination-container" id="paginationBox" style="display: none;">
+            <button id="loadMoreBtn" class="btn-secondary">Cargar más grupos</button>
         </div>
     </section>
 
@@ -237,6 +256,8 @@
     </section>
 </main>
 
+<div id="toast-container"></div>
+
 <footer>
     <p>&copy; 2026 Directorio de Grupos de WhatsApp. Todos los derechos reservados.</p>
     <p style="font-size:0.8rem; opacity:0.7; margin-top:5px;">Este sitio web es una guía independiente de anuncios y no guarda relación comercial ni oficial con WhatsApp Inc. o Meta Platforms.</p>
@@ -245,15 +266,35 @@
 <script>
     const SUPABASE_URL = "https://anzuqdwjivtqhhigkzde.supabase.co";
     const SUPABASE_KEY = "sb_publishable_dnNC6D5JqzVGE51jkL3EDg_Mb_McOtL";
-    // CORREGIDO: Usar el objeto global de la CDN de Supabase correctamente
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Variables de control de paginación profesional
+    let itemsPorPagina = 12;
+    let paginaActual = 0;
+    let totalGruposCargados = [];
+
+    // Sistema de notificaciones profesionales flotantes (Toast)
+    function mostrarToast(mensaje, tipo = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${tipo}`;
+        toast.innerText = mensaje;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
 
     async function cargarGrupos() {
         const container = document.getElementById('groupsContainer');
+        const paginationBox = document.getElementById('paginationBox');
         
+        // Calcular la marca de tiempo de hace 48 horas atrás
+        const hace48Horas = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+
+        // Traer solo los elementos que tengan menos de 48 horas de vida
         let { data: grupos, error } = await _supabase
             .from('grupos')
             .select('*')
+            .gte('created_at', hace48Horas)
             .order('created_at', { ascending: false });
 
         if (error) {
@@ -263,12 +304,27 @@
         }
 
         if (!grupos || grupos.length === 0) {
-            container.innerHTML = "<p>Aún no hay grupos publicados. ¡Sé el primero en subir el tuyo!</p>";
+            container.innerHTML = "<p>Aún no hay grupos publicados en las últimas 48 horas. ¡Sé el primero en subir el tuyo!</p>";
+            paginationBox.style.display = 'none';
             return;
         }
 
-        container.innerHTML = ""; 
-        grupos.forEach(grupo => {
+        totalGruposCargados = grupos;
+        paginaActual = 0;
+        renderizarBloqueGrupos(true);
+    }
+
+    function renderizarBloqueGrupos(reiniciar = false) {
+        const container = document.getElementById('groupsContainer');
+        const paginationBox = document.getElementById('paginationBox');
+        
+        if (reiniciar) container.innerHTML = "";
+
+        const inicio = paginaActual * itemsPorPagina;
+        const fin = inicio + itemsPorPagina;
+        const segmento = totalGruposCargados.slice(inicio, fin);
+
+        segmento.forEach(grupo => {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
@@ -284,34 +340,74 @@
             `;
             container.appendChild(card);
         });
+
+        // Mostrar u ocultar el botón "Cargar más" dependiendo del remanente
+        if (totalGruposCargados.length > fin) {
+            paginationBox.style.display = 'block';
+        } else {
+            paginationBox.style.display = 'none';
+        }
     }
+
+    // Evento para el botón de paginación
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+        paginaActual++;
+        renderizarBloqueGrupos(false);
+    });
 
     document.getElementById('groupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        const submitBtn = document.getElementById('submitBtn');
         const titulo = document.getElementById('titulo').value;
-        const enlace = document.getElementById('enlace').value;
+        const enlace = document.getElementById('enlace').value.trim();
         const categoria = document.getElementById('categoria').value;
         const pais = document.getElementById('pais').value;
         const descripcion = document.getElementById('descripcion').value;
 
         if(!enlace.includes('chat.whatsapp.com/')) {
-            alert('Por favor introduce un enlace de invitación oficial de WhatsApp válido.');
+            mostrarToast('Por favor introduce un enlace de invitación oficial de WhatsApp válido.', 'error');
             return;
         }
 
-        // CORREGIDO: El envío de datos ahora evalúa el estado del error directamente
-        const { error } = await _supabase
-            .from('grupos')
-            .insert([{ titulo, enlace, categoria, pais, descripcion }]);
+        // Feedback visual: Cambiar el estado del botón al procesar la información
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Verificando y publicando...";
 
-        if (error) {
-            alert('Hubo un error al intentar guardar el grupo.');
-            console.error(error);
-        } else {
-            alert('¡Tu grupo se ha publicado con éxito en el directorio!');
+        try {
+            // REQUERIMIENTO: Comprobar dinámicamente que el enlace no esté repetido
+            let { data: existente, error: errorBusqueda } = await _supabase
+                .from('grupos')
+                .select('enlace')
+                .eq('enlace', enlace);
+
+            if (errorBusqueda) throw errorBusqueda;
+
+            if (existente && existente.length > 0) {
+                mostrarToast('Este grupo ya se encuentra publicado en el directorio.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Publicar mi grupo gratis";
+                return;
+            }
+
+            // Proceder con la inserción si el enlace es único
+            const { error: errorInsert } = await _supabase
+                .from('grupos')
+                .insert([{ titulo, enlace, categoria, pais, descripcion }]);
+
+            if (errorInsert) throw errorInsert;
+
+            mostrarToast('¡Tu grupo se ha publicado con éxito en el directorio!');
             document.getElementById('groupForm').reset();
             cargarGrupos(); 
+
+        } catch (err) {
+            mostrarToast('Hubo un error al intentar guardar el grupo.', 'error');
+            console.error(err);
+        } finally {
+            // Restaurar botón al finalizar los procesos asíncronos
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Publicar mi grupo gratis";
         }
     });
 
