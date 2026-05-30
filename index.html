@@ -245,12 +245,13 @@
 <script>
     const SUPABASE_URL = "https://anzuqdwjivtqhhigkzde.supabase.co";
     const SUPABASE_KEY = "sb_publishable_dnNC6D5JqzVGE51jkL3EDg_Mb_McOtL";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    // CORREGIDO: Usar el objeto global de la CDN de Supabase correctamente
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function cargarGrupos() {
         const container = document.getElementById('groupsContainer');
         
-        let { data: grupos, error } = await supabase
+        let { data: grupos, error } = await _supabase
             .from('grupos')
             .select('*')
             .order('created_at', { ascending: false });
@@ -299,7 +300,8 @@
             return;
         }
 
-        const { data, error } = await supabase
+        // CORREGIDO: El envío de datos ahora evalúa el estado del error directamente
+        const { error } = await _supabase
             .from('grupos')
             .insert([{ titulo, enlace, categoria, pais, descripcion }]);
 
