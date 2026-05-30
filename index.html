@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupos de WhatsApp para Unirse - Directorio de Enlaces Gratis</title>
+    <meta name="description" content="Encuentra y únete a los mejores grupos de WhatsApp activos. Directorio gratuito organizado por categorías y países. ¡Publica tu enlace de grupo gratis hoy!">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { 
+            --primary: #25D366; 
+            --primary-dark: #128C7E; 
+            --dark-bg: #075E54;
+            --light-bg: #f0f2f5; 
+            --text-main: #333333;
+            --text-muted: #666666;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        body { 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--light-bg); 
+            margin: 0; 
+            padding: 0; 
+            color: var(--text-main); 
+            line-height: 1.6;
+        }
+        
+        header { 
+            background: linear-gradient(135deg, var(--dark-bg), var(--primary-dark)); 
+            color: white; 
+            padding: 40px 20px; 
+            text-align: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        header h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
+        header p { margin: 10px 0 25px 0; font-size: 1.1rem; opacity: 0.9; }
+        
+        nav { display: flex; justify-content: center; gap: 15px; }
+        nav a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 10px 20px; 
+            border-radius: 50px; 
+            background: rgba(255, 255, 255, 0.15);
+            transition: background 0.3s ease;
+        }
+        nav a:hover { background: rgba(255, 255, 255, 0.3); }
+        
+        main { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        
+        .section-title { color: var(--primary-dark); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 25px; font-size: 1.5rem; }
+        
+        .form-section, .grid-section, .seo-section { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: var(--card-shadow); 
+            margin-bottom: 35px; 
+        }
+        
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
+        .form-group.full-width { grid-column: span 1; }
+        @media (min-width: 600px) { .form-group.full-width { grid-column: auto / span 2; } }
+        
+        .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: #444; }
+        .form-group input, .form-group select, .form-group textarea { 
+            padding: 12px; 
+            border: 1px solid #ccd0d5; 
+            border-radius: 6px; 
+            font-size: 105%;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary-dark);
+            outline: none;
+        }
+        
+        button { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 14px 28px; 
+            font-size: 1rem; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(37, 211, 102, 0.3);
+            margin-top: 10px;
+        }
+        button:hover { background: #20ba5a; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(37, 211, 102, 0.4); }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
+        
+        .card { 
+            border: 1px solid #e9ecef; 
+            padding: 20px; 
+            border-radius: 10px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            background: #ffffff; 
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow); }
+        .card h3 { margin: 0 0 12px 0; color: var(--primary-dark); font-size: 1.3rem; }
+        
+        .badges-wrapper { margin-bottom: 12px; }
+        .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; font-size: 0.8rem; border-radius: 20px; font-weight: 600; margin-right: 6px; }
+        .badge.geo { background: #e3f2fd; color: #1565c0; }
+        
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin: 0 0 20px 0; }
+        
+        .btn-join { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: var(--primary); 
+            color: white; 
+            text-decoration: none; 
+            padding: 12px; 
+            border-radius: 6px; 
+            font-weight: 700; 
+            transition: background 0.2s;
+        }
+        .btn-join:hover { background: var(--primary-dark); }
+        .btn-join::before { content: "💬 "; margin-right: 6px; }
+
+        /* Estilos SEO extra */
+        .faq-item { margin-bottom: 20px; }
+        .faq-item h3 { color: var(--primary-dark); margin-bottom: 5px; font-size: 1.1rem; }
+        .faq-item p { margin: 0; color: #555; }
+        footer { background: #222; color: #bbb; text-align: center; padding: 20px; font-size: 0.9rem; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Directorio de Grupos de WhatsApp</h1>
+    <p>Conéctate con comunidades, comparte tus enlaces y gana miembros al instante</p>
+    <nav>
+        <a href="#buscar">🔍 Explorar Directorio</a>
+        <a href="#publicar">➕ Publicar Grupo</a>
+    </nav>
+</header>
+
+<main>
+    <section id="publicar" class="form-section">
+        <h2 class="section-title">Publica tu Grupo de WhatsApp</h2>
+        <form id="groupForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="titulo">Nombre del Grupo</label>
+                    <input type="text" id="titulo" required placeholder="Ej: Gamers de Latinoamérica">
+                </div>
+                <div class="form-group">
+                    <label for="enlace">Enlace de Invitación</label>
+                    <input type="url" id="enlace" required placeholder="https://chat.whatsapp.com/... ">
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria">
+                        <option value="Amistad">Amistad / Amigos</option>
+                        <option value="Ligar">Ligar / Citas</option>
+                        <option value="Videojuegos">Videojuegos / Gaming</option>
+                        <option value="Anime">Anime y Manga</option>
+                        <option value="Estudios">Estudios / Educación</option>
+                        <option value="Negocios">Negocios / Emprendimiento</option>
+                        <option value="Cine y Música">Cine, Series y Música</option>
+                        <option value="Otros">Otros Temas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="pais">País del Grupo</label>
+                    <select id="pais" required>
+                        <option value="" disabled selected>Selecciona un país...</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Bolivia">Bolivia</option>
+                        <option value="Chile">Chile</option>
+                        <option value="Colombia">Colombia</option>
+                        <option value="Costa Rica">Costa Rica</option>
+                        <option value="Cuba">Cuba</option>
+                        <option value="Ecuador">Ecuador</option>
+                        <option value="El Salvador">El Salvador</option>
+                        <option value="España">España</option>
+                        <option value="Estados Unidos">Estados Unidos</option>
+                        <option value="Guatemala">Guatemala</option>
+                        <option value="Honduras">Honduras</option>
+                        <option value="México">México</option>
+                        <option value="Nicaragua">Nicaragua</option>
+                        <option value="Panamá">Panamá</option>
+                        <option value="Paraguay">Paraguay</option>
+                        <option value="Perú">Perú</option>
+                        <option value="Puerto Rico">Puerto Rico</option>
+                        <option value="República Dominicana">República Dominicana</option>
+                        <option value="Uruguay">Uruguay</option>
+                        <option value="Venezuela">Venezuela</option>
+                        <option value="Internacional">Internacional / Todo el mundo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group full-width" style="margin-top: 15px;">
+                <label for="descripcion">Descripción del Grupo (Ayuda al SEO)</label>
+                <textarea id="descripcion" rows="3" placeholder="Describe brevemente las reglas del grupo o de qué temas hablan para atraer a miembros interesados..."></textarea>
+            </div>
+            <button type="submit">Publicar mi grupo gratis</button>
+        </form>
+    </section>
+
+    <section id="buscar" class="grid-section">
+        <h2 class="section-title">Grupos de WhatsApp Recientes</h2>
+        <div class="grid" id="groupsContainer">
+            <p>Cargando los grupos del directorio...</p>
+        </div>
+    </section>
+
+    <section class="seo-section">
+        <h2 class="section-title">Información sobre Grupos de WhatsApp Públicos</h2>
+        <div class="faq-item">
+            <h3>¿Qué es un grupo de WhatsApp público?</h3>
+            <p>Es una sala de chat creada dentro de la aplicación de mensajería WhatsApp a la cual cualquier usuario puede unirse libremente si cuenta con el enlace de invitación o código QR correcto, sin necesidad de que el administrador lo agregue de forma manual.</p>
+        </div>
+        <div class="faq-item">
+            <h3>¿Cómo publicar mi grupo en este directorio?</h3>
+            <p>Es 100% gratuito. Solo debes rellenar el formulario superior con el nombre de tu grupo, seleccionar la categoría correspondiente, el país al que pertenece y pegar tu enlace oficial 'chat.whatsapp.com/'. Tu grupo aparecerá listado al instante.</p>
+        </div>
+        <div class="faq-item">
+            <h3>¿Cuál es el límite de miembros en los grupos?</h3>
+            <p>Actualmente, la plataforma de WhatsApp permite que los grupos públicos y privados tengan un límite máximo de hasta 1024 miembros por sala de chat.</p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 Directorio de Grupos de WhatsApp. Todos los derechos reservados.</p>
+    <p style="font-size:0.8rem; opacity:0.7; margin-top:5px;">Este sitio web es una guía independiente de anuncios y no guarda relación comercial ni oficial con WhatsApp Inc. o Meta Platforms.</p>
+</footer>
+
+<script>
+    const SUPABASE_URL = "https://anzuqdwjivtqhhigkzde.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_dnNC6D5JqzVGE51jkL3EDg_Mb_McOtL";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function cargarGrupos() {
+        const container = document.getElementById('groupsContainer');
+        
+        let { data: grupos, error } = await supabase
+            .from('grupos')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            container.innerHTML = "<p>Error al conectar con el servidor.</p>";
+            console.error(error);
+            return;
+        }
+
+        if (!grupos || grupos.length === 0) {
+            container.innerHTML = "<p>Aún no hay grupos publicados. ¡Sé el primero en subir el tuyo!</p>";
+            return;
+        }
+
+        container.innerHTML = ""; 
+        grupos.forEach(grupo => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div>
+                    <h3>${escaparHTML(grupo.titulo)}</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge">📁 ${escaparHTML(grupo.categoria)}</span>
+                        <span class="badge geo">📍 ${escaparHTML(grupo.pais)}</span>
+                    </div>
+                    <p>${escaparHTML(grupo.descripcion || 'Sin descripción disponible.')}</p>
+                </div>
+                <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener" class="btn-join">Unirse al Chat</a>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    document.getElementById('groupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const titulo = document.getElementById('titulo').value;
+        const enlace = document.getElementById('enlace').value;
+        const categoria = document.getElementById('categoria').value;
+        const pais = document.getElementById('pais').value;
+        const descripcion = document.getElementById('descripcion').value;
+
+        if(!enlace.includes('chat.whatsapp.com/')) {
+            alert('Por favor introduce un enlace de invitación oficial de WhatsApp válido.');
+            return;
+        }
+
+        const { data, error } = await supabase
+            .from('grupos')
+            .insert([{ titulo, enlace, categoria, pais, descripcion }]);
+
+        if (error) {
+            alert('Hubo un error al intentar guardar el grupo.');
+            console.error(error);
+        } else {
+            alert('¡Tu grupo se ha publicado con éxito en el directorio!');
+            document.getElementById('groupForm').reset();
+            cargarGrupos(); 
+        }
+    });
+
+    function escaparHTML(str) {
+        return str.replace(/[&<>'"]/g, 
+            tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+        );
+    }
+
+    cargarGrupos();
+</script>
+
+</body>
+</html>
