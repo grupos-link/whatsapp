@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grupos de WhatsApp para Unirse - Directorio de Enlaces Gratis</title>
+    <title>Links de Grupos de WhatsApp 2026 - Directorio de Enlaces para Unirse</title>
     <meta name="description" content="Encuentra y únete a los mejores grupos de WhatsApp activos. Directorio gratuito organizado por categorías y países. ¡Publica tu enlace de grupo gratis hoy!">
     <meta name="google-site-verification" content="7psMNXqApwX_Qj4QvGC6Q0eI_LbmjnTE2ITxYajCbmQ" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -155,30 +155,11 @@
         footer { background: #222; color: #bbb; text-align: center; padding: 20px; font-size: 0.9rem; margin-top: 40px; }
     </style>
     <script>
-  // Primero cargamos el script original de Adsterra de forma normal
-  const adScript = document.createElement('script');
-  adScript.src = "https://pl29600524.effectivecpmnetwork.com/1e/d9/0a/1ed90a384b0aa63ad3c71a09f67b9690.js";
-  document.head.appendChild(adScript);
-
-  // Truco del Scroll: Escucha cuando el usuario desliza la pantalla
-  let anuncioActivado = false;
-  window.addEventListener('scroll', () => {
-    if (!anuncioActivado) {
-      anuncioActivado = true; // Evita que se repita en bucle al seguir bajando
-      
-      // Simulamos un toque invisible en el fondo de la página para activar el Popunder
-      setTimeout(() => {
-        const eventoClic = new MouseEvent('click', {
-          view: window,
-          bubbles: true,
-          cancelable: true
-        });
-        document.body.dispatchEvent(eventoClic);
-      }, 200); // Espera 200 milisegundos tras el scroll para que sea natural
-    }
-  });
-</script>
-
+      // Cargamos el script de Adsterra de forma segura
+      const adScript = document.createElement('script');
+      adScript.src = "https://pl29600524.effectivecpmnetwork.com/1e/d9/0a/1ed90a384b0aa63ad3c71a09f67b9690.js";
+      document.head.appendChild(adScript);
+    </script>
 </head>
 <body>
 
@@ -275,6 +256,14 @@
             <p>Es 100% gratuito. Solo debes rellenar el formulario superior con el nombre de tu grupo, seleccionar la categoría correspondiente, el país al que pertenece y pegar tu enlace oficial 'chat.whatsapp.com/'. Tu grupo aparecerá listado al instante.</p>
         </div>
         <div class="faq-item">
+            <h3>¿Qué categorías de grupos de WhatsApp puedo encontrar aquí?</h3>
+            <p>Nuestro índice recopila una gran variedad de enlaces activos organizados meticulosamente. Podrás unirte a grupos de WhatsApp de Free Fire, Minecraft, anime, manga, memes graciosos, frases de amor, amistad internacional, salas de chat para ligar, y comunidades de apoyo para estudios o emprendimientos.</p>
+        </div>
+        <div class="faq-item">
+            <h3>¿De qué países hay comunidades disponibles?</h3>
+            <p>Contamos con enlaces de invitaciones estables para comunidades de múltiples regiones de habla hispana, incluyendo grupos enfocados en usuarios de México, Argentina, Colombia, Chile, Perú, España, Venezuela, Ecuador y Estados Unidos, además de opciones internacionales válidas para personas de todo el mundo.</p>
+        </div>
+        <div class="faq-item">
             <h3>¿Cuál es el límite de miembros en los grupos?</h3>
             <p>Actualmente, la plataforma de WhatsApp permite que los grupos públicos y privados tengan un límite máximo de hasta 1024 miembros por sala de chat.</p>
         </div>
@@ -311,16 +300,13 @@
     async function cargarGrupos() {
         const container = document.getElementById('groupsContainer');
         const paginationBox = document.getElementById('paginationBox');
-        
-        // Calcular la marca de tiempo de hace 48 horas atrás
-        const hace48Horas = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
 
-        // Traer solo los elementos que tengan menos de 48 horas de vida
+        // Optimización SEO: Traemos los últimos 30 grupos añadidos para que la lista nunca se muestre vacía
         let { data: grupos, error } = await _supabase
             .from('grupos')
             .select('*')
-            .gte('created_at', hace48Horas)
-            .order('created_at', { ascending: false });
+            .order('created_at', { ascending: false })
+            .limit(30);
 
         if (error) {
             container.innerHTML = "<p>Error al conectar con el servidor.</p>";
@@ -329,7 +315,7 @@
         }
 
         if (!grupos || grupos.length === 0) {
-            container.innerHTML = "<p>Aún no hay grupos publicados en las últimas 48 horas. ¡Sé el primero en subir el tuyo!</p>";
+            container.innerHTML = "<p>Aún no hay grupos publicados en el directorio. ¡Sé el primero en subir el tuyo!</p>";
             paginationBox.style.display = 'none';
             return;
         }
@@ -386,7 +372,7 @@
         const submitBtn = document.getElementById('submitBtn');
         const titulo = document.getElementById('titulo').value;
         const enlace = document.getElementById('enlace').value.trim();
-        const categoria = document.getElementById('categoria').value;
+        const category = document.getElementById('categoria').value;
         const pais = document.getElementById('pais').value;
         const descripcion = document.getElementById('descripcion').value;
 
@@ -418,7 +404,7 @@
             // Proceder con la inserción si el enlace es único
             const { error: errorInsert } = await _supabase
                 .from('grupos')
-                .insert([{ titulo, enlace, categoria, pais, descripcion }]);
+                .insert([{ titulo, enlace, categoria: category, pais, descripcion }]);
 
             if (errorInsert) throw errorInsert;
 
