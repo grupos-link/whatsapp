@@ -154,7 +154,30 @@
         .faq-item p { margin: 0; color: #555; }
         footer { background: #222; color: #bbb; text-align: center; padding: 20px; font-size: 0.9rem; margin-top: 40px; }
     </style>
-    <script src="https://pl29600524.effectivecpmnetwork.com/1e/d9/0a/1ed90a384b0aa63ad3c71a09f67b9690.js"></script>
+    <script>
+  // Primero cargamos el script original de Adsterra de forma normal
+  const adScript = document.createElement('script');
+  adScript.src = "https://pl29600524.effectivecpmnetwork.com/1e/d9/0a/1ed90a384b0aa63ad3c71a09f67b9690.js";
+  document.head.appendChild(adScript);
+
+  // Truco del Scroll: Escucha cuando el usuario desliza la pantalla
+  let anuncioActivado = false;
+  window.addEventListener('scroll', () => {
+    if (!anuncioActivado) {
+      anuncioActivado = true; // Evita que se repita en bucle al seguir bajando
+      
+      // Simulamos un toque invisible en el fondo de la página para activar el Popunder
+      setTimeout(() => {
+        const eventoClic = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: true
+        });
+        document.body.dispatchEvent(eventoClic);
+      }, 200); // Espera 200 milisegundos tras el scroll para que sea natural
+    }
+  });
+</script>
 
 </head>
 <body>
