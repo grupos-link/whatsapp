@@ -13,9 +13,10 @@
             --primary-dark: #128C7E; 
             --dark-bg: #075E54;
             --light-bg: #f0f2f5; 
-            --text-main: #333333;
-            --text-muted: #666666;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --text-main: #222222;
+            --text-muted: #555555;
+            --card-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+            --card-shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.12);
             --danger: #e53935;
         }
         
@@ -31,37 +32,52 @@
         header { 
             background: linear-gradient(135deg, var(--dark-bg), var(--primary-dark)); 
             color: white; 
-            padding: 40px 20px; 
+            padding: 50px 20px; 
             text-align: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
-        header h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
-        header p { margin: 10px 0 25px 0; font-size: 1.1rem; opacity: 0.9; }
+        header h1 { margin: 0; font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px; }
+        header p { margin: 12px 0 30px 0; font-size: 1.15rem; opacity: 0.95; max-width: 600px; margin-left: auto; margin-right: auto; }
         
-        nav { display: flex; justify-content: center; gap: 15px; }
+        nav { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         nav a { 
             color: white; 
             text-decoration: none; 
             font-weight: 600; 
-            padding: 10px 20px; 
+            padding: 12px 24px; 
             border-radius: 50px; 
             background: rgba(255, 255, 255, 0.15);
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
         }
-        nav a:hover { background: rgba(255, 255, 255, 0.3); }
+        nav a:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
         
-        main { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        main { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
         
-        .section-title { color: var(--primary-dark); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 25px; font-size: 1.5rem; }
+        .section-title { color: var(--primary-dark); border-bottom: 3px solid var(--primary); padding-bottom: 8px; margin-bottom: 25px; font-size: 1.6rem; font-weight: 700; }
         
         .form-section, .grid-section, .seo-section { 
             background: white; 
-            padding: 30px; 
-            border-radius: 12px; 
+            padding: 35px; 
+            border-radius: 14px; 
             box-shadow: var(--card-shadow); 
-            margin-bottom: 35px; 
+            margin-bottom: 40px; 
         }
+        
+        /* Sistema de Filtros Avanzado e Intuitivo */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+        .filter-container input { flex: 2; min-width: 240px; }
+        .filter-container select { flex: 1; min-width: 160px; }
         
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
@@ -69,15 +85,17 @@
         @media (min-width: 600px) { .form-group.full-width { grid-column: auto / span 2; } }
         
         .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: #444; }
-        .form-group input, .form-group select, .form-group textarea { 
-            padding: 12px; 
+        .form-group input, .form-group select, .form-group textarea, .filter-container input, .filter-container select { 
+            padding: 14px; 
             border: 1px solid #ccd0d5; 
-            border-radius: 6px; 
-            font-size: 105%;
-            transition: border-color 0.3s;
+            border-radius: 8px; 
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus, .filter-container input:focus, .filter-container select:focus {
             border-color: var(--primary-dark);
+            box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.15);
             outline: none;
         }
         
@@ -85,39 +103,45 @@
             background: var(--primary); 
             color: white; 
             border: none; 
-            padding: 14px 28px; 
+            padding: 15px 32px; 
             font-size: 1rem; 
-            border-radius: 6px; 
+            border-radius: 8px; 
             cursor: pointer; 
             font-weight: 700; 
             transition: all 0.3s ease;
-            box-shadow: 0 3px 6px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 8px rgba(37, 211, 102, 0.25);
             margin-top: 10px;
         }
-        button:hover { background: #20ba5a; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(37, 211, 102, 0.4); }
+        button:hover { background: #20ba5a; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(37, 211, 102, 0.35); }
         button:disabled { background: #cccccc; cursor: not-allowed; transform: none; box-shadow: none; }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-top: 20px; }
+        /* Rediseño de Tarjetas para evitar excesivo scroll */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 25px; margin-top: 20px; }
         
         .card { 
             border: 1px solid #e9ecef; 
-            padding: 20px; 
+            border-left: 5px solid var(--primary);
+            padding: 24px; 
             border-radius: 10px; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
             background: #ffffff; 
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.01);
         }
-        .card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow); }
-        .card h3 { margin: 0 0 12px 0; color: var(--primary-dark); font-size: 1.3rem; }
+        .card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: var(--card-shadow-hover);
+            border-left-color: var(--primary-dark);
+        }
+        .card h3 { margin: 0 0 10px 0; color: #111; font-size: 1.3rem; font-weight: 700; }
         
-        .badges-wrapper { margin-bottom: 12px; }
-        .badge { display: inline-block; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; font-size: 0.8rem; border-radius: 20px; font-weight: 600; margin-right: 6px; }
-        .badge.geo { background: #e3f2fd; color: #1565c0; }
+        .badges-wrapper { margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .badge { display: inline-block; background: #e8f5e9; color: #1b5e20; padding: 5px 12px; font-size: 0.8rem; border-radius: 20px; font-weight: 600; }
+        .badge.geo { background: #e3f2fd; color: #0d47a1; }
         
-        .card p { color: var(--text-muted); font-size: 0.95rem; margin: 0 0 20px 0; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; margin: 0 0 22px 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: 4.85em; }
         
         .btn-join { 
             display: flex; 
@@ -127,19 +151,17 @@
             color: white; 
             text-decoration: none; 
             padding: 12px; 
-            border-radius: 6px; 
+            border-radius: 8px; 
             font-weight: 700; 
-            transition: background 0.2s;
+            transition: all 0.2s ease;
         }
-        .btn-join:hover { background: var(--primary-dark); }
+        .btn-join:hover { background: var(--primary-dark); transform: scale(1.02); }
         .btn-join::before { content: "💬 "; margin-right: 6px; }
 
-        /* Estilos de paginación y feedback profesional */
-        .pagination-container { text-align: center; margin-top: 30px; }
+        .pagination-container { text-align: center; margin-top: 35px; }
         .btn-secondary { background: #fff; color: var(--primary-dark); border: 2px solid var(--primary-dark); box-shadow: none; }
-        .btn-secondary:hover { background: var(--light-bg); transform: translateY(-1px); box-shadow: var(--card-shadow); }
+        .btn-secondary:hover { background: var(--light-bg); transform: translateY(-2px); box-shadow: var(--card-shadow); }
         
-        /* Contenedor Toast para Notificaciones */
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: 600; font-size: 0.95rem; animation: slideIn 0.3s forwards, fadeOut 0.3s 3.7s forwards; min-width: 250px; border-left: 5px solid #fff; }
         .toast.success { border-left-color: var(--primary); }
@@ -148,24 +170,45 @@
         @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-        /* Estilos SEO extra */
-        .faq-item { margin-bottom: 20px; }
-        .faq-item h3 { color: var(--primary-dark); margin-bottom: 5px; font-size: 1.1rem; }
-        .faq-item p { margin: 0; color: #555; }
-        footer { background: #222; color: #bbb; text-align: center; padding: 20px; font-size: 0.9rem; margin-top: 40px; }
+        .faq-item { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #f0f2f5; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-item h3 { color: var(--primary-dark); margin-bottom: 8px; font-size: 1.15rem; font-weight: 600; }
+        .faq-item p { margin: 0; color: #444; }
+        footer { background: #111; color: #aaa; text-align: center; padding: 30px 20px; font-size: 0.9rem; margin-top: 50px; border-top: 4px solid var(--primary-dark); }
     </style>
     <script>
-      // Cargamos el script de Adsterra de forma segura
       const adScript = document.createElement('script');
       adScript.src = "https://pl29600524.effectivecpmnetwork.com/1e/d9/0a/1ed90a384b0aa63ad3c71a09f67b9690.js";
       document.head.appendChild(adScript);
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "¿Qué es un grupo de WhatsApp público?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Es una sala de chat creada dentro de la aplicación de mensajería WhatsApp a la cual cualquier usuario puede unirse libremente si cuenta con el enlace de invitación o código QR correcto."
+        }
+      }, {
+        "@type": "Question",
+        "name": "¿Cómo publicar mi grupo en este directorio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Es 100% gratuito. Solo debes rellenar el formulario superior con el nombre de tu grupo, seleccionar la categoría correspondiente, el país al que pertenece y pegar tu enlace oficial 'chat.whatsapp.com/'."
+        }
+      }]
+    }
     </script>
 </head>
 <body>
 
 <header>
     <h1>Directorio de Grupos de WhatsApp</h1>
-    <p>Conéctate con comunidades, comparte tus enlaces y gana miembros al instante</p>
+    <p>Conéctate con miles de comunidades, comparte tus enlaces y gana miembros al instante de forma gratuita.</p>
     <nav>
         <a href="#buscar">🔍 Explorar Directorio</a>
         <a href="#publicar">➕ Publicar Grupo</a>
@@ -236,7 +279,36 @@
     </section>
 
     <section id="buscar" class="grid-section">
-        <h2 class="section-title">Grupos de WhatsApp Recientes</h2>
+        <h2 class="section-title">🔍 Explorar Directorio de Enlaces</h2>
+        
+        <div class="filter-container">
+            <input type="text" id="searchBar" placeholder="Buscar por palabra clave (Ej: Free Fire, Anime)...">
+            <select id="filterCategoria">
+                <option value="Todos">Todas las Categorías</option>
+                <option value="Amistad">Amistad / Amigos</option>
+                <option value="Ligar">Ligar / Citas</option>
+                <option value="Videojuegos">Videojuegos / Gaming</option>
+                <option value="Anime">Anime y Manga</option>
+                <option value="Estudios">Estudios / Educación</option>
+                <option value="Negocios">Negocios / Emprendimiento</option>
+                <option value="Cine y Música">Cine, Series y Música</option>
+                <option value="Otros">Otros Temas</option>
+            </select>
+            <select id="filterPais">
+                <option value="Todos">Todos los Países</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Chile">Chile</option>
+                <option value="Colombia">Colombia</option>
+                <option value="España">España</option>
+                <option value="Estados Unidos">Estados Unidos</option>
+                <option value="México">México</option>
+                <option value="Perú">Perú</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Internacional">Internacional</option>
+            </select>
+        </div>
+
         <div class="grid" id="groupsContainer">
             <p>Cargando los grupos del directorio...</p>
         </div>
@@ -282,12 +354,11 @@
     const SUPABASE_KEY = "sb_publishable_dnNC6D5JqzVGE51jkL3EDg_Mb_McOtL";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Variables de control de paginación profesional
     let itemsPorPagina = 12;
     let paginaActual = 0;
     let totalGruposCargados = [];
+    let gruposFiltrados = []; // Nueva lista dedicada a los elementos bajo filtros
 
-    // Sistema de notificaciones profesionales flotantes (Toast)
     function mostrarToast(mensaje, tipo = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
@@ -301,12 +372,12 @@
         const container = document.getElementById('groupsContainer');
         const paginationBox = document.getElementById('paginationBox');
 
-        // Optimización SEO: Traemos los últimos 30 grupos añadidos para que la lista nunca se muestre vacía
+        // Ampliamos el rango de límites iniciales de 30 a 150 para enriquecer las búsquedas inmediatas en el cliente sin causar lentitud
         let { data: grupos, error } = await _supabase
             .from('grupos')
             .select('*')
             .order('created_at', { ascending: false })
-            .limit(30);
+            .limit(150);
 
         if (error) {
             container.innerHTML = "<p>Error al conectar con el servidor.</p>";
@@ -321,6 +392,24 @@
         }
 
         totalGruposCargados = grupos;
+        filtrarYRenderizar(); // Ejecuta el filtrado adaptativo inicial
+    }
+
+    // Procesa las entradas del buscador y los selectores dinámicamente
+    function filtrarYRenderizar() {
+        const query = document.getElementById('searchBar').value.toLowerCase().trim();
+        const categoriaSeleccionada = document.getElementById('filterCategoria').value;
+        const paisSeleccionado = document.getElementById('filterPais').value;
+
+        gruposFiltrados = totalGruposCargados.filter(grupo => {
+            const coincideBusqueda = grupo.titulo.toLowerCase().includes(query) || 
+                                     (grupo.descripcion && grupo.descripcion.toLowerCase().includes(query));
+            const coincideCategoria = categoriaSeleccionada === "Todos" || grupo.categoria === categoriaSeleccionada;
+            const coincidePais = paisSeleccionado === "Todos" || grupo.pais === paisSeleccionado;
+
+            return coincideBusqueda && coincideCategoria && coincidePais;
+        });
+
         paginaActual = 0;
         renderizarBloqueGrupos(true);
     }
@@ -331,9 +420,15 @@
         
         if (reiniciar) container.innerHTML = "";
 
+        if (gruposFiltrados.length === 0) {
+            container.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;'>No se encontraron grupos que coincidan con los filtros aplicados.</p>";
+            paginationBox.style.display = 'none';
+            return;
+        }
+
         const inicio = paginaActual * itemsPorPagina;
         const fin = inicio + itemsPorPagina;
-        const segmento = totalGruposCargados.slice(inicio, fin);
+        const segmento = gruposFiltrados.slice(inicio, fin);
 
         segmento.forEach(grupo => {
             const card = document.createElement('div');
@@ -352,19 +447,22 @@
             container.appendChild(card);
         });
 
-        // Mostrar u ocultar el botón "Cargar más" dependiendo del remanente
-        if (totalGruposCargados.length > fin) {
+        if (gruposFiltrados.length > fin) {
             paginationBox.style.display = 'block';
         } else {
             paginationBox.style.display = 'none';
         }
     }
 
-    // Evento para el botón de paginación
     document.getElementById('loadMoreBtn').addEventListener('click', () => {
         paginaActual++;
         renderizarBloqueGrupos(false);
     });
+
+    // Escuchas reactivas para que filtre en tiempo real sin recargar la página
+    document.getElementById('searchBar').addEventListener('input', filtrarYRenderizar);
+    document.getElementById('filterCategoria').addEventListener('change', filtrarYRenderizar);
+    document.getElementById('filterPais').addEventListener('change', filtrarYRenderizar);
 
     document.getElementById('groupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -381,12 +479,10 @@
             return;
         }
 
-        // Feedback visual: Cambiar el estado del botón al procesar la información
         submitBtn.disabled = true;
         submitBtn.innerText = "Verificando y publicando...";
 
         try {
-            // REQUERIMIENTO: Comprobar dinámicamente que el enlace no esté repetido
             let { data: existente, error: errorBusqueda } = await _supabase
                 .from('grupos')
                 .select('enlace')
@@ -401,7 +497,6 @@
                 return;
             }
 
-            // Proceder con la inserción si el enlace es único
             const { error: errorInsert } = await _supabase
                 .from('grupos')
                 .insert([{ titulo, enlace, categoria: category, pais, descripcion }]);
@@ -416,7 +511,6 @@
             mostrarToast('Hubo un error al intentar guardar el grupo.', 'error');
             console.error(err);
         } finally {
-            // Restaurar botón al finalizar los procesos asíncronos
             submitBtn.disabled = false;
             submitBtn.innerText = "Publicar mi grupo gratis";
         }
