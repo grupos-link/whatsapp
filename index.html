@@ -115,13 +115,13 @@
         button:hover { background: #20ba5a; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(37, 211, 102, 0.35); }
         button:disabled { background: #cccccc; cursor: not-allowed; transform: none; box-shadow: none; }
         
-        /* Rediseño de Tarjetas para evitar excesivo scroll */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 25px; margin-top: 20px; }
+        /* AJUSTES PROFESIONALES DE TARJETAS (MÁS COMPACTAS Y JUNTAS) */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; margin-top: 20px; }
         
         .card { 
             border: 1px solid #e9ecef; 
             border-left: 5px solid var(--primary);
-            padding: 24px; 
+            padding: 16px; 
             border-radius: 10px; 
             display: flex; 
             flex-direction: column; 
@@ -131,17 +131,17 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.01);
         }
         .card:hover { 
-            transform: translateY(-6px); 
+            transform: translateY(-4px); 
             box-shadow: var(--card-shadow-hover);
             border-left-color: var(--primary-dark);
         }
-        .card h3 { margin: 0 0 10px 0; color: #111; font-size: 1.3rem; font-weight: 700; }
+        .card h3 { margin: 0 0 6px 0; color: #111; font-size: 1.25rem; font-weight: 700; }
         
-        .badges-wrapper { margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
-        .badge { display: inline-block; background: #e8f5e9; color: #1b5e20; padding: 5px 12px; font-size: 0.8rem; border-radius: 20px; font-weight: 600; }
+        .badges-wrapper { margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .badge { display: inline-block; background: #e8f5e9; color: #1b5e20; padding: 4px 10px; font-size: 0.78rem; border-radius: 20px; font-weight: 600; }
         .badge.geo { background: #e3f2fd; color: #0d47a1; }
         
-        .card p { color: var(--text-muted); font-size: 0.95rem; margin: 0 0 22px 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: 4.85em; }
+        .card p { color: var(--text-muted); font-size: 0.92rem; margin: 0 0 14px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: auto; }
         
         .btn-join { 
             display: flex; 
@@ -150,12 +150,13 @@
             background: var(--primary); 
             color: white; 
             text-decoration: none; 
-            padding: 12px; 
+            padding: 11px; 
             border-radius: 8px; 
             font-weight: 700; 
+            font-size: 0.95rem;
             transition: all 0.2s ease;
         }
-        .btn-join:hover { background: var(--primary-dark); transform: scale(1.02); }
+        .btn-join:hover { background: var(--primary-dark); transform: scale(1.01); }
         .btn-join::before { content: "💬 "; margin-right: 6px; }
 
         .pagination-container { text-align: center; margin-top: 35px; }
@@ -175,6 +176,60 @@
         .faq-item h3 { color: var(--primary-dark); margin-bottom: 8px; font-size: 1.15rem; font-weight: 600; }
         .faq-item p { margin: 0; color: #444; }
         footer { background: #111; color: #aaa; text-align: center; padding: 30px 20px; font-size: 0.9rem; margin-top: 50px; border-top: 4px solid var(--primary-dark); }
+
+        /* =======================================================
+           MÓDULO RESPONSIVO PARA DISPOSITIVOS MÓVILES (CELULARES)
+           ======================================================= */
+        @media (max-width: 500px) {
+            .grid {
+                gap: 10px; /* Une más las tarjetas reduciendo la separación */
+            }
+            
+            .card {
+                padding: 12px; /* Espaciado interno mínimo para optimizar la pantalla */
+                flex-direction: row; /* Convierte la tarjeta en una fila horizontal */
+                align-items: center;
+                gap: 12px;
+            }
+            
+            /* Contenedor del texto (título y badges) a la izquierda */
+            .card > div:first-child {
+                flex: 1;
+                min-width: 0; /* Evita que títulos largos deformen la fila */
+            }
+            
+            .card h3 {
+                font-size: 1.1rem;
+                margin-bottom: 5px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis; /* Corta títulos excesivamente largos con '...' */
+            }
+            
+            /* Ocultamos las descripciones solo en celulares para ahorrar el 50% de espacio vertical */
+            .card p {
+                display: none; 
+            }
+            
+            .badges-wrapper {
+                margin-bottom: 0;
+                gap: 4px;
+            }
+            
+            .badge {
+                font-size: 0.72rem;
+                padding: 2px 8px;
+            }
+            
+            /* Ajuste del botón 'Unirse' como un contenedor compacto a la derecha */
+            .btn-join {
+                padding: 8px 14px;
+                font-size: 0.85rem;
+                white-space: nowrap;
+                margin-top: 0;
+                border-radius: 6px;
+            }
+        }
     </style>
     <script>
       const adScript = document.createElement('script');
@@ -357,7 +412,7 @@
     let itemsPorPagina = 12;
     let paginaActual = 0;
     let totalGruposCargados = [];
-    let gruposFiltrados = []; // Nueva lista dedicada a los elementos bajo filtros
+    let gruposFiltrados = []; 
 
     function mostrarToast(mensaje, tipo = 'success') {
         const container = document.getElementById('toast-container');
@@ -372,7 +427,6 @@
         const container = document.getElementById('groupsContainer');
         const paginationBox = document.getElementById('paginationBox');
 
-        // Ampliamos el rango de límites iniciales de 30 a 150 para enriquecer las búsquedas inmediatas en el cliente sin causar lentitud
         let { data: grupos, error } = await _supabase
             .from('grupos')
             .select('*')
@@ -392,10 +446,9 @@
         }
 
         totalGruposCargados = grupos;
-        filtrarYRenderizar(); // Ejecuta el filtrado adaptativo inicial
+        filtrarYRenderizar(); 
     }
 
-    // Procesa las entradas del buscador y los selectores dinámicamente
     function filtrarYRenderizar() {
         const query = document.getElementById('searchBar').value.toLowerCase().trim();
         const categoriaSeleccionada = document.getElementById('filterCategoria').value;
@@ -442,7 +495,7 @@
                     </div>
                     <p>${escaparHTML(grupo.descripcion || 'Sin descripción disponible.')}</p>
                 </div>
-                <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener" class="btn-join">Unirse al Chat</a>
+                <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener" class="btn-join">Unirse</a>
             `;
             container.appendChild(card);
         });
@@ -459,7 +512,6 @@
         renderizarBloqueGrupos(false);
     });
 
-    // Escuchas reactivas para que filtre en tiempo real sin recargar la página
     document.getElementById('searchBar').addEventListener('input', filtrarYRenderizar);
     document.getElementById('filterCategoria').addEventListener('change', filtrarYRenderizar);
     document.getElementById('filterPais').addEventListener('change', filtrarYRenderizar);
