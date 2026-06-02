@@ -143,6 +143,7 @@
         .filter-container select { flex: 1; min-width: 160px; }
         
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
         .form-group.full-width { grid-column: span 1; }
         @media (min-width: 600px) { .form-group.full-width { grid-column: auto / span 2; } }
@@ -561,7 +562,7 @@
         const paisSelect = document.getElementById('filterPais').value;
 
         gruposFiltrados = totalGruposCargados.filter(grupo => {
-            const enlaceUrl = group.enlace.toLowerCase();
+            const enlaceUrl = grupo.enlace.toLowerCase();
             // Determinar tipo real del registro basado en su URL almacenada
             const esCanal = enlaceUrl.includes("channel/");
             
