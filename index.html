@@ -292,11 +292,6 @@
             }
         }
     </style>
-    <script>
-      const adScript = document.createElement('script');
-      adScript.src = "https://pl29600524.effectivecpmnetwork.com/1e/d9/0a/1ed90a384b0aa63ad3c71a09f67b9690.js";
-      document.head.appendChild(adScript);
-    </script>
     
     <script type="application/ld+json">
     {
@@ -566,7 +561,7 @@
         const paisSelect = document.getElementById('filterPais').value;
 
         gruposFiltrados = totalGruposCargados.filter(grupo => {
-            const enlaceUrl = grupo.enlace.toLowerCase();
+            const enlaceUrl = group.enlace.toLowerCase();
             // Determinar tipo real del registro basado en su URL almacenada
             const esCanal = enlaceUrl.includes("channel/");
             
@@ -719,6 +714,18 @@
     }
 
     cargarGrupos();
+</script>
+
+<!-- Carga optimizada de la Social Bar menos invasiva -->
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+          const nuevoAd = document.createElement('script');
+          nuevoAd.src = "https://pl29622970.effectivecpmnetwork.com/d7/4f/91/d74f918fc14ab31dd1931d174e216287.js";
+          nuevoAd.type = "text/javascript";
+          document.body.appendChild(nuevoAd);
+      }, 1500); // Aparece 1.5 segundos después de que cargue la web
+  });
 </script>
 
 </body>
