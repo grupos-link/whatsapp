@@ -64,6 +64,69 @@
             box-shadow: var(--card-shadow); 
             margin-bottom: 40px; 
         }
+
+        /* ESTILOS DE LA VENTANA MODAL EMERGENTE */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(5px);
+            overflow-y: auto;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 14px;
+            width: 90%;
+            max-width: 650px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-modal:hover { color: #333; }
+        @keyframes modalFadeIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* BOTONES FLOTANTES Y SELECTORES DE TIPO DE ENLACE */
+        .type-selector-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .type-btn {
+            background: #e9ecef;
+            color: var(--text-main);
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .type-btn.active {
+            background: var(--primary-dark);
+            color: white;
+        }
         
         /* Sistema de Filtros Avanzado e Intuitivo */
         .filter-container {
@@ -140,6 +203,7 @@
         .badges-wrapper { margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
         .badge { display: inline-block; background: #e8f5e9; color: #1b5e20; padding: 4px 10px; font-size: 0.78rem; border-radius: 20px; font-weight: 600; }
         .badge.geo { background: #e3f2fd; color: #0d47a1; }
+        .badge.tipo { background: #fff3e0; color: #e65100; }
         
         .card p { color: var(--text-muted); font-size: 0.92rem; margin: 0 0 14px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; min-height: auto; }
         
@@ -163,7 +227,7 @@
         .btn-secondary { background: #fff; color: var(--primary-dark); border: 2px solid var(--primary-dark); box-shadow: none; }
         .btn-secondary:hover { background: var(--light-bg); transform: translateY(-2px); box-shadow: var(--card-shadow); }
         
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: #333; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); font-weight: 600; font-size: 0.95rem; animation: slideIn 0.3s forwards, fadeOut 0.3s 3.7s forwards; min-width: 250px; border-left: 5px solid #fff; }
         .toast.success { border-left-color: var(--primary); }
         .toast.error { border-left-color: var(--danger); }
@@ -182,20 +246,19 @@
            ======================================================= */
         @media (max-width: 500px) {
             .grid {
-                gap: 10px; /* Une más las tarjetas reduciendo la separación */
+                gap: 10px;
             }
             
             .card {
-                padding: 12px; /* Espaciado interno mínimo para optimizar la pantalla */
-                flex-direction: row; /* Convierte la tarjeta en una fila horizontal */
+                padding: 12px;
+                flex-direction: row;
                 align-items: center;
                 gap: 12px;
             }
             
-            /* Contenedor del texto (título y badges) a la izquierda */
             .card > div:first-child {
                 flex: 1;
-                min-width: 0; /* Evita que títulos largos deformen la fila */
+                min-width: 0;
             }
             
             .card h3 {
@@ -203,10 +266,9 @@
                 margin-bottom: 5px;
                 white-space: nowrap;
                 overflow: hidden;
-                text-overflow: ellipsis; /* Corta títulos excesivamente largos con '...' */
+                text-overflow: ellipsis;
             }
             
-            /* Ocultamos las descripciones solo en celulares para ahorrar el 50% de espacio vertical */
             .card p {
                 display: none; 
             }
@@ -221,7 +283,6 @@
                 padding: 2px 8px;
             }
             
-            /* Ajuste del botón 'Unirse' como un contenedor compacto a la derecha */
             .btn-join {
                 padding: 8px 14px;
                 font-size: 0.85rem;
@@ -253,7 +314,7 @@
         "name": "¿Cómo publicar mi grupo en este directorio?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Es 100% gratuito. Solo debes rellenar el formulario superior con el nombre de tu grupo, seleccionar la categoría correspondiente, el país al que pertenece y pegar tu enlace oficial 'chat.whatsapp.com/'."
+          "text": "Es 100% gratuito. Solo debes pulsar el botón de Publicar Enlace y rellenar los datos de tu comunidad o canal."
         }
       }]
     }
@@ -262,79 +323,95 @@
 <body>
 
 <header>
-    <h1>Directorio de Grupos de WhatsApp</h1>
+    <h1>Directorio de Grupos y Canales de WhatsApp</h1>
     <p>Conéctate con miles de comunidades, comparte tus enlaces y gana miembros al instante de forma gratuita.</p>
     <nav>
         <a href="#buscar">🔍 Explorar Directorio</a>
-        <a href="#publicar">➕ Publicar Grupo</a>
+        <a href="javascript:void(0)" id="openModalNav">➕ Publicar Enlace</a>
     </nav>
 </header>
 
 <main>
-    <section id="publicar" class="form-section">
-        <h2 class="section-title">Publica tu Grupo de WhatsApp</h2>
-        <form id="groupForm">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="titulo">Nombre del Grupo</label>
-                    <input type="text" id="titulo" required placeholder="Ej: Gamers de Latinoamérica">
+    <!-- BOTÓN ATRACTIVO PARA MOSTRAR LA MODAL -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button id="openModalBtn" style="background: var(--primary-dark); font-size: 1.2rem; padding: 16px 40px; border-radius: 50px;">✨ ¡Publicar Grupo o Canal Gratis! ✨</button>
+    </div>
+
+    <!-- VENTANA EMERGENTE (MODAL) OCULTA -->
+    <div id="publishModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModalBtn">&times;</span>
+            <h2 class="section-title" id="modalTitle" style="margin-top: 10px;">Publica tu Grupo de WhatsApp</h2>
+            <form id="groupForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label id="lblTitulo" for="titulo">Nombre del Grupo</label>
+                        <input type="text" id="titulo" required placeholder="Ej: Gamers de Latinoamérica">
+                    </div>
+                    <div class="form-group">
+                        <label id="lblEnlace" for="enlace">Enlace de Invitación / Canal</label>
+                        <input type="url" id="enlace" required placeholder="https://chat.whatsapp.com/... o https://whatsapp.com/channel/...">
+                    </div>
+                    <div class="form-group">
+                        <label id="lblCategoria" for="categoria">Categoría</label>
+                        <select id="categoria">
+                            <option value="Amistad">Amistad / Amigos</option>
+                            <option value="Ligar">Ligar / Citas</option>
+                            <option value="Videojuegos">Videojuegos / Gaming</option>
+                            <option value="Anime">Anime y Manga</option>
+                            <option value="Estudios">Estudios / Educación</option>
+                            <option value="Negocios">Negocios / Emprendimiento</option>
+                            <option value="Cine y Música">Cine, Series y Música</option>
+                            <option value="Otros">Otros Temas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="lblPais" for="pais">País de la Comunidad</label>
+                        <select id="pais" required>
+                            <option value="" disabled selected>Selecciona un país...</option>
+                            <option value="Argentina">Argentina</option>
+                            <option value="Bolivia">Bolivia</option>
+                            <option value="Chile">Chile</option>
+                            <option value="Colombia">Colombia</option>
+                            <option value="Costa Rica">Costa Rica</option>
+                            <option value="Cuba">Cuba</option>
+                            <option value="Ecuador">Ecuador</option>
+                            <option value="El Salvador">El Salvador</option>
+                            <option value="España">España</option>
+                            <option value="Estados Unidos">Estados Unidos</option>
+                            <option value="Guatemala">Guatemala</option>
+                            <option value="Honduras">Honduras</option>
+                            <option value="México">México</option>
+                            <option value="Nicaragua">Nicaragua</option>
+                            <option value="Panamá">Panamá</option>
+                            <option value="Paraguay">Paraguay</option>
+                            <option value="Perú">Perú</option>
+                            <option value="Puerto Rico">Puerto Rico</option>
+                            <option value="República Dominicana">República Dominicana</option>
+                            <option value="Uruguay">Uruguay</option>
+                            <option value="Venezuela">Venezuela</option>
+                            <option value="Internacional">Internacional / Todo el mundo</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="enlace">Enlace de Invitación</label>
-                    <input type="url" id="enlace" required placeholder="https://chat.whatsapp.com/... ">
+                <div class="form-group full-width" style="margin-top: 15px;">
+                    <label id="lblDescripcion" for="descripcion">Descripción (Ayuda al SEO)</label>
+                    <textarea id="descripcion" rows="3" placeholder="Describe brevemente las reglas o de qué temas hablan para atraer a miembros interesados..."></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="categoria">Categoría</label>
-                    <select id="categoria">
-                        <option value="Amistad">Amistad / Amigos</option>
-                        <option value="Ligar">Ligar / Citas</option>
-                        <option value="Videojuegos">Videojuegos / Gaming</option>
-                        <option value="Anime">Anime y Manga</option>
-                        <option value="Estudios">Estudios / Educación</option>
-                        <option value="Negocios">Negocios / Emprendimiento</option>
-                        <option value="Cine y Música">Cine, Series y Música</option>
-                        <option value="Otros">Otros Temas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="pais">País del Grupo</label>
-                    <select id="pais" required>
-                        <option value="" disabled selected>Selecciona un país...</option>
-                        <option value="Argentina">Argentina</option>
-                        <option value="Bolivia">Bolivia</option>
-                        <option value="Chile">Chile</option>
-                        <option value="Colombia">Colombia</option>
-                        <option value="Costa Rica">Costa Rica</option>
-                        <option value="Cuba">Cuba</option>
-                        <option value="Ecuador">Ecuador</option>
-                        <option value="El Salvador">El Salvador</option>
-                        <option value="España">España</option>
-                        <option value="Estados Unidos">Estados Unidos</option>
-                        <option value="Guatemala">Guatemala</option>
-                        <option value="Honduras">Honduras</option>
-                        <option value="México">México</option>
-                        <option value="Nicaragua">Nicaragua</option>
-                        <option value="Panamá">Panamá</option>
-                        <option value="Paraguay">Paraguay</option>
-                        <option value="Perú">Perú</option>
-                        <option value="Puerto Rico">Puerto Rico</option>
-                        <option value="República Dominicana">República Dominicana</option>
-                        <option value="Uruguay">Uruguay</option>
-                        <option value="Venezuela">Venezuela</option>
-                        <option value="Internacional">Internacional / Todo el mundo</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group full-width" style="margin-top: 15px;">
-                <label for="descripcion">Descripción del Grupo (Ayuda al SEO)</label>
-                <textarea id="descripcion" rows="3" placeholder="Describe brevemente las reglas del grupo o de qué temas hablan para atraer a miembros interesados..."></textarea>
-            </div>
-            <button type="submit" id="submitBtn">Publicar mi grupo gratis</button>
-        </form>
-    </section>
+                <button type="submit" id="submitBtn" style="width: 100%;">Publicar gratis ahora</button>
+            </form>
+        </div>
+    </div>
 
     <section id="buscar" class="grid-section">
         <h2 class="section-title">🔍 Explorar Directorio de Enlaces</h2>
+
+        <!-- FILTRO DE TIPO DE ENLACES (TODOS / GRUPOS / CANALES) -->
+        <div class="type-selector-container">
+            <button class="type-btn active" data-type="Todos">Todos ✨</button>
+            <button class="type-btn" data-type="Grupo">Grupos 👥</button>
+            <button class="type-btn" data-type="Canal">Canales 📢</button>
+        </div>
         
         <div class="filter-container">
             <input type="text" id="searchBar" placeholder="Buscar por palabra clave (Ej: Free Fire, Anime)...">
@@ -368,7 +445,7 @@
             <p>Cargando los grupos del directorio...</p>
         </div>
         <div class="pagination-container" id="paginationBox" style="display: none;">
-            <button id="loadMoreBtn" class="btn-secondary">Cargar más grupos</button>
+            <button id="loadMoreBtn" class="btn-secondary">Cargar más resultados</button>
         </div>
     </section>
 
@@ -413,6 +490,40 @@
     let paginaActual = 0;
     let totalGruposCargados = [];
     let gruposFiltrados = []; 
+    let tipoFiltroActual = "Todos"; // Controla el filtro dinámico superior
+
+    // LOGICA DE LA MODAL EMERGENTE
+    const modal = document.getElementById("publishModal");
+    const openBtn = document.getElementById("openModalBtn");
+    const openNav = document.getElementById("openModalNav");
+    const closeBtn = document.getElementById("closeModalBtn");
+
+    function abrirModal() { modal.style.display = "block"; }
+    function cerrarModal() { modal.style.display = "none"; }
+
+    openBtn.addEventListener("click", abrirModal);
+    openNav.addEventListener("click", abrirModal);
+    closeBtn.addEventListener("click", cerrarModal);
+    window.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
+
+    // DETECCIÓN DINÁMICA DE TIPO SEGÚN EL ENLACE
+    const enlaceInput = document.getElementById("enlace");
+    enlaceInput.addEventListener("input", () => {
+        const url = enlaceInput.value.toLowerCase().trim();
+        const modalTitle = document.getElementById("modalTitle");
+        const lblTitulo = document.getElementById("lblTitulo");
+        const submitBtn = document.getElementById("submitBtn");
+
+        if (url.includes("channel/")) {
+            modalTitle.innerText = "Publica tu Canal de WhatsApp";
+            lblTitulo.innerText = "Nombre del Canal";
+            submitBtn.innerText = "Publicar mi canal gratis";
+        } else {
+            modalTitle.innerText = "Publica tu Grupo de WhatsApp";
+            lblTitulo.innerText = "Nombre del Grupo";
+            submitBtn.innerText = "Publicar mi grupo gratis";
+        }
+    });
 
     function mostrarToast(mensaje, tipo = 'success') {
         const container = document.getElementById('toast-container');
@@ -440,7 +551,7 @@
         }
 
         if (!grupos || grupos.length === 0) {
-            container.innerHTML = "<p>Aún no hay grupos publicados en el directorio. ¡Sé el primero en subir el tuyo!</p>";
+            container.innerHTML = "<p>Aún no hay enlaces publicados en el directorio. ¡Sé el primero!</p>";
             paginationBox.style.display = 'none';
             return;
         }
@@ -451,16 +562,25 @@
 
     function filtrarYRenderizar() {
         const query = document.getElementById('searchBar').value.toLowerCase().trim();
-        const categoriaSeleccionada = document.getElementById('filterCategoria').value;
-        const paisSeleccionado = document.getElementById('filterPais').value;
+        const categorySelect = document.getElementById('filterCategoria').value;
+        const paisSelect = document.getElementById('filterPais').value;
 
         gruposFiltrados = totalGruposCargados.filter(grupo => {
+            const enlaceUrl = grupo.enlace.toLowerCase();
+            // Determinar tipo real del registro basado en su URL almacenada
+            const esCanal = enlaceUrl.includes("channel/");
+            
+            // Filtro por tipo superior (Todos / Grupo / Canal)
+            let coincideTipo = true;
+            if (tipoFiltroActual === "Grupo") coincideTipo = !esCanal;
+            if (tipoFiltroActual === "Canal") coincideTipo = esCanal;
+
             const coincideBusqueda = grupo.titulo.toLowerCase().includes(query) || 
                                      (grupo.descripcion && grupo.descripcion.toLowerCase().includes(query));
-            const coincideCategoria = categoriaSeleccionada === "Todos" || grupo.categoria === categoriaSeleccionada;
-            const coincidePais = paisSeleccionado === "Todos" || grupo.pais === paisSeleccionado;
+            const coincideCategoria = categorySelect === "Todos" || grupo.categoria === categorySelect;
+            const coincidePais = paisSelect === "Todos" || grupo.pais === paisSelect;
 
-            return coincideBusqueda && coincideCategoria && coincidePais;
+            return coincideTipo && coincideBusqueda && coincideCategoria && coincidePais;
         });
 
         paginaActual = 0;
@@ -474,7 +594,7 @@
         if (reiniciar) container.innerHTML = "";
 
         if (gruposFiltrados.length === 0) {
-            container.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;'>No se encontraron grupos que coincidan con los filtros aplicados.</p>";
+            container.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;'>No se encontraron resultados que coincidan con los filtros aplicados.</p>";
             paginationBox.style.display = 'none';
             return;
         }
@@ -486,16 +606,23 @@
         segmento.forEach(grupo => {
             const card = document.createElement('div');
             card.className = 'card';
+            
+            // Detectar dinámicamente el tipo para renderizar la tarjeta
+            const esCanal = grupo.enlace.toLowerCase().includes("channel/");
+            const txtTipo = esCanal ? "📢 Canal" : "👥 Grupo";
+            const txtBtnUnirse = esCanal ? "Seguir Canal" : "Unirse";
+
             card.innerHTML = `
                 <div>
                     <h3>${escaparHTML(grupo.titulo)}</h3>
                     <div class="badges-wrapper">
+                        <span class="badge tipo">${txtTipo}</span>
                         <span class="badge">📁 ${escaparHTML(grupo.categoria)}</span>
                         <span class="badge geo">📍 ${escaparHTML(grupo.pais)}</span>
                     </div>
                     <p>${escaparHTML(grupo.descripcion || 'Sin descripción disponible.')}</p>
                 </div>
-                <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener" class="btn-join">Unirse</a>
+                <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener" class="btn-join">${txtBtnUnirse}</a>
             `;
             container.appendChild(card);
         });
@@ -506,6 +633,16 @@
             paginationBox.style.display = 'none';
         }
     }
+
+    // MANEJO DE SELECCIÓN DE TIPO SUPERIOR
+    document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            tipoFiltroActual = e.target.getAttribute('data-type');
+            filtrarYRenderizar();
+        });
+    });
 
     document.getElementById('loadMoreBtn').addEventListener('click', () => {
         paginaActual++;
@@ -526,13 +663,18 @@
         const pais = document.getElementById('pais').value;
         const descripcion = document.getElementById('descripcion').value;
 
-        if(!enlace.includes('chat.whatsapp.com/')) {
-            mostrarToast('Por favor introduce un enlace de invitación oficial de WhatsApp válido.', 'error');
+        // Validar que sea un enlace válido de WhatsApp (Grupo o Canal)
+        const esGrupoValido = enlace.includes('chat.whatsapp.com/');
+        const esCanalValido = enlace.includes('whatsapp.com/channel/');
+
+        if(!esGrupoValido && !esCanalValido) {
+            mostrarToast('Introduce un enlace oficial válido (chat.whatsapp.com/ o whatsapp.com/channel/).', 'error');
             return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.innerText = "Verificando y publicando...";
+        const tipoActualTexto = esCanalValido ? "canal" : "grupo";
+        submitBtn.innerText = `Verificando y publicando ${tipoActualTexto}...`;
 
         try {
             let { data: existente, error: errorBusqueda } = await _supabase
@@ -543,28 +685,30 @@
             if (errorBusqueda) throw errorBusqueda;
 
             if (existente && existente.length > 0) {
-                mostrarToast('Este grupo ya se encuentra publicado en el directorio.', 'error');
+                mostrarToast('Este enlace ya se encuentra publicado en el directorio.', 'error');
                 submitBtn.disabled = false;
-                submitBtn.innerText = "Publicar mi grupo gratis";
+                submitBtn.innerText = "Publicar gratis ahora";
                 return;
             }
 
+            // Inserción directa manteniendo tu estructura actual de base de datos
             const { error: errorInsert } = await _supabase
                 .from('grupos')
                 .insert([{ titulo, enlace, categoria: category, pais, descripcion }]);
 
             if (errorInsert) throw errorInsert;
 
-            mostrarToast('¡Tu grupo se ha publicado con éxito en el directorio!');
+            mostrarToast(`¡Tu ${tipoActualTexto} se ha publicado con éxito!`);
             document.getElementById('groupForm').reset();
+            cerrarModal();
             cargarGrupos(); 
 
         } catch (err) {
-            mostrarToast('Hubo un error al intentar guardar el grupo.', 'error');
+            mostrarToast('Hubo un error al intentar guardar el enlace.', 'error');
             console.error(err);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.innerText = "Publicar mi grupo gratis";
+            submitBtn.innerText = "Publicar gratis ahora";
         }
     });
 
