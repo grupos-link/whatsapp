@@ -489,12 +489,10 @@
     const SUPABASE_KEY = "sb_publishable_dnNC6D5JqzVGE51jkL3EDg_Mb_McOtL";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // CAMBIADO A 5 ELEMENTOS POR PÁGINA SEGÚN TU SOLICITUD
     let itemsPorPagina = 5;
     let paginaActual = 0;
-    let totalGruposCargados = [];
-    let gruposFiltrados = []; 
-    let tipoFiltroActual = "Todos"; // Controla el filtro dinámico superior
+    let tipoFiltroActual = "Todos"; 
+    let totalItemsFiltrados = 0; // Almacena el total absoluto según los filtros
 
     // LOGICA DE LA MODAL EMERGENTE
     const modal = document.getElementById("publishModal");
@@ -538,15 +536,47 @@
         setTimeout(() => toast.remove(), 4000);
     }
 
+    // NUEVA FUNCIÓN PRINCIPAL OPTIMIZADA DESDE EL SERVIDOR
     async function cargarGrupos() {
         const container = document.getElementById('groupsContainer');
         const paginationBox = document.getElementById('paginationBox');
 
-        let { data: grupos, error } = await _supabase
+        const query = document.getElementById('searchBar').value.toLowerCase().trim();
+        const categorySelect = document.getElementById('filterCategoria').value;
+        const paisSelect = document.getElementById('filterPais').value;
+
+        // 1. Iniciamos la consulta base pidiendo conteo exacto
+        let consulta = _supabase
             .from('grupos')
-            .select('*')
+            .select('*', { count: 'exact' });
+
+        // 2. Aplicar filtros dinámicos en el servidor de Supabase
+        if (tipoFiltroActual === "Grupo") {
+            consulta = consulta.not('enlace', 'ilike', '%channel/%');
+        } else if (tipoFiltroActual === "Canal") {
+            consulta = consulta.ilike('enlace', '%channel/%');
+        }
+
+        if (categorySelect !== "Todos") {
+            consulta = consulta.eq('categoria', categorySelect);
+        }
+
+        if (paisSelect !== "Todos") {
+            consulta = consulta.eq('pais', paisSelect);
+        }
+
+        if (query !== "") {
+            // Buscador por título o descripción directamente en la BD
+            consulta = consulta.or(`titulo.ilike.%${query}%,descripcion.ilike.%${query}%`);
+        }
+
+        // 3. Aplicar paginación limpia desde el servidor (Rango exacto de 5 registros)
+        const desde = paginaActual * itemsPorPagina;
+        const hasta = desde + itemsPorPagina - 1;
+
+        let { data: grupos, count, error } = await consulta
             .order('created_at', { ascending: false })
-            .limit(150);
+            .range(desde, hasta);
 
         if (error) {
             container.innerHTML = "<p>Error al conectar con el servidor.</p>";
@@ -554,59 +584,17 @@
             return;
         }
 
+        totalItemsFiltrados = count || 0;
+
         if (!grupos || grupos.length === 0) {
-            container.innerHTML = "<p>Aún no hay enlaces publicados en el directorio. ¡Sé el primero!</p>";
-            paginationBox.style.display = 'none';
-            return;
-        }
-
-        totalGruposCargados = grupos;
-        filtrarYRenderizar(); 
-    }
-
-    function filtrarYRenderizar() {
-        const query = document.getElementById('searchBar').value.toLowerCase().trim();
-        const categorySelect = document.getElementById('filterCategoria').value;
-        const paisSelect = document.getElementById('filterPais').value;
-
-        gruposFiltrados = totalGruposCargados.filter(grupo => {
-            const enlaceUrl = grupo.enlace.toLowerCase();
-            const esCanal = enlaceUrl.includes("channel/");
-            
-            let coincideTipo = true;
-            if (tipoFiltroActual === "Grupo") coincideTipo = !esCanal;
-            if (tipoFiltroActual === "Canal") coincideTipo = esCanal;
-
-            const coincideBusqueda = grupo.titulo.toLowerCase().includes(query) || 
-                                     (grupo.descripcion && grupo.descripcion.toLowerCase().includes(query));
-            const coincideCategoria = categorySelect === "Todos" || grupo.categoria === categorySelect;
-            const coincidePais = paisSelect === "Todos" || grupo.pais === paisSelect;
-
-            return coincideTipo && coincideBusqueda && coincideCategoria && coincidePais;
-        });
-
-        paginaActual = 0; // Reiniciar a la primera página cuando se busca o filtra
-        renderizarBloqueGrupos();
-    }
-
-    function renderizarBloqueGrupos() {
-        const container = document.getElementById('groupsContainer');
-        const paginationBox = document.getElementById('paginationBox');
-        
-        container.innerHTML = ""; // Limpiar siempre para la paginación tradicional
-
-        if (gruposFiltrados.length === 0) {
             container.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;'>No se encontraron resultados que coincidan con los filtros aplicados.</p>";
             paginationBox.style.display = 'none';
             return;
         }
 
-        // Calcular el índice de inicio y fin de la página actual
-        const inicio = paginaActual * itemsPorPagina;
-        const fin = inicio + itemsPorPagina;
-        const segmento = gruposFiltrados.slice(inicio, fin);
-
-        segmento.forEach(grupo => {
+        // 4. Renderizar el segmento exacto devuelto por Supabase
+        container.innerHTML = "";
+        grupos.forEach(grupo => {
             const card = document.createElement('div');
             card.className = 'card';
             
@@ -629,19 +617,22 @@
             container.appendChild(card);
         });
 
-        // CONTROL Y ACTUALIZACIÓN DE LA BOTONERA DE PAGINACIÓN
-        const totalPaginas = Math.ceil(gruposFiltrados.length / itemsPorPagina);
+        // 5. Controlar la interfaz de la botonera de paginación
+        const totalPaginas = Math.ceil(totalItemsFiltrados / itemsPorPagina);
         
         if (totalPaginas > 1) {
             paginationBox.style.display = 'flex';
             document.getElementById('pageIndicator').innerText = `Página ${paginaActual + 1} de ${totalPaginas}`;
-            
-            // Habilitar o deshabilitar botones según la posición
             document.getElementById('prevBtn').disabled = (paginaActual === 0);
             document.getElementById('nextBtn').disabled = (paginaActual === totalPaginas - 1);
         } else {
             paginationBox.style.display = 'none';
         }
+    }
+
+    function alCambiarFiltro() {
+        paginaActual = 0; // Resetea a la primera página ante cualquier nueva búsqueda o cambio
+        cargarGrupos();
     }
 
     // MANEJO DE SELECCIÓN DE TIPO SUPERIOR
@@ -650,31 +641,31 @@
             document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
             tipoFiltroActual = e.target.getAttribute('data-type');
-            filtrarYRenderizar();
+            alCambiarFiltro();
         });
     });
 
-    // EVENTOS DE LOS NUEVOS BOTONES DE PAGINACIÓN (< y >)
+    // EVENTOS DE LOS BOTONES DE PAGINACIÓN (< y >)
     document.getElementById('prevBtn').addEventListener('click', () => {
         if (paginaActual > 0) {
             paginaActual--;
-            renderizarBloqueGrupos();
-            document.getElementById('buscar').scrollIntoView({ behavior: 'smooth' }); // Sube suavemente a los resultados
+            cargarGrupos();
+            document.getElementById('buscar').scrollIntoView({ behavior: 'smooth' });
         }
     });
 
     document.getElementById('nextBtn').addEventListener('click', () => {
-        const totalPaginas = Math.ceil(gruposFiltrados.length / itemsPorPagina);
+        const totalPaginas = Math.ceil(totalItemsFiltrados / itemsPorPagina);
         if (paginaActual < totalPaginas - 1) {
             paginaActual++;
-            renderizarBloqueGrupos();
-            document.getElementById('buscar').scrollIntoView({ behavior: 'smooth' }); // Sube suavemente a los resultados
+            cargarGrupos();
+            document.getElementById('buscar').scrollIntoView({ behavior: 'smooth' });
         }
     });
 
-    document.getElementById('searchBar').addEventListener('input', filtrarYRenderizar);
-    document.getElementById('filterCategoria').addEventListener('change', filtrarYRenderizar);
-    document.getElementById('filterPais').addEventListener('change', filtrarYRenderizar);
+    document.getElementById('searchBar').addEventListener('input', alCambiarFiltro);
+    document.getElementById('filterCategoria').addEventListener('change', alCambiarFiltro);
+    document.getElementById('filterPais').addEventListener('change', alCambiarFiltro);
 
     document.getElementById('groupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -722,7 +713,7 @@
             mostrarToast(`¡Tu ${tipoActualTexto} se ha publicado con éxito!`);
             document.getElementById('groupForm').reset();
             cerrarModal();
-            cargarGrupos(); 
+            alCambiarFiltro(); 
 
         } catch (err) {
             mostrarToast('Hubo un error al intentar guardar el enlace.', 'error');
@@ -739,6 +730,7 @@
         );
     }
 
+    // Carga inicial al entrar al sitio
     cargarGrupos();
 </script>
 
