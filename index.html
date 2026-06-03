@@ -145,7 +145,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
-        .filter-container input { flex: 2; min-width: 240px; }
+        .filter-container > div { flex: 2; min-width: 240px; }
         .filter-container select { flex: 1; min-width: 160px; }
         
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
@@ -414,7 +414,10 @@
         </div>
         
         <div class="filter-container">
-            <input type="text" id="searchBar" placeholder="Buscar por palabra clave (Ej: Free Fire, Anime)...">
+            <div style="display: flex; flex: 2; min-width: 240px; gap: 8px;">
+                <input type="text" id="searchBar" placeholder="Buscar por palabra clave (Ej: Free Fire, Anime)..." style="flex: 1; margin: 0;">
+                <button id="btnBuscar" type="button" style="margin: 0; padding: 0 20px; display: flex; align-items: center; justify-content: center;">🔍</button>
+            </div>
             <select id="filterCategoria">
                 <option value="Todos">Todas las Categorías</option>
                 <option value="Amistad">Amistad / Amigos</option>
@@ -432,10 +435,22 @@
                 <option value="Bolivia">Bolivia</option>
                 <option value="Chile">Chile</option>
                 <option value="Colombia">Colombia</option>
+                <option value="Costa Rica">Costa Rica</option>
+                <option value="Cuba">Cuba</option>
+                <option value="Ecuador">Ecuador</option>
+                <option value="El Salvador">El Salvador</option>
                 <option value="España">España</option>
                 <option value="Estados Unidos">Estados Unidos</option>
+                <option value="Guatemala">Guatemala</option>
+                <option value="Honduras">Honduras</option>
                 <option value="México">México</option>
+                <option value="Nicaragua">Nicaragua</option>
+                <option value="Panamá">Panamá</option>
+                <option value="Paraguay">Paraguay</option>
                 <option value="Perú">Perú</option>
+                <option value="Puerto Rico">Puerto Rico</option>
+                <option value="República Dominicana">República Dominicana</option>
+                <option value="Uruguay">Uruguay</option>
                 <option value="Venezuela">Venezuela</option>
                 <option value="Internacional">Internacional</option>
             </select>
@@ -663,7 +678,11 @@
         }
     });
 
-    document.getElementById('searchBar').addEventListener('input', alCambiarFiltro);
+    // Filtros por botón/Enter o por cambios de los selectores directos
+    document.getElementById('btnBuscar').addEventListener('click', alCambiarFiltro);
+    document.getElementById('searchBar').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') alCambiarFiltro();
+    });
     document.getElementById('filterCategoria').addEventListener('change', alCambiarFiltro);
     document.getElementById('filterPais').addEventListener('change', alCambiarFiltro);
 
@@ -672,7 +691,8 @@
         
         const submitBtn = document.getElementById('submitBtn');
         const titulo = document.getElementById('titulo').value;
-        const enlace = document.getElementById('enlace').value.trim();
+        // Limpieza robusta del enlace removiendo espacios y barras diagonales finales redundantes
+        const enlace = document.getElementById('enlace').value.trim().replace(/[\s/]+$/, '');
         const category = document.getElementById('categoria').value;
         const pais = document.getElementById('pais').value;
         const descripcion = document.getElementById('descripcion').value;
