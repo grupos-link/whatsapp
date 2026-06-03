@@ -230,9 +230,42 @@
         .btn-join:hover { background: var(--primary-dark); color: white; border-color: var(--primary-dark); }
         .btn-join::before { content: "💬 "; margin-right: 4px; }
 
-        .pagination-container { text-align: center; margin-top: 35px; }
-        .btn-secondary { background: #fff; color: #4a5568; border: 1px solid #cbd5e0; box-shadow: none; }
-        .btn-secondary:hover { background: #f7fafc; transform: translateY(-1px); box-shadow: var(--card-shadow); border-color: #a0aec0; }
+        /* ESTILOS NUEVOS PARA LA PAGINACIÓN PROFESIONAL */
+        .pagination-container { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 15px; 
+            margin-top: 35px; 
+        }
+        .pagination-info { 
+            font-weight: 600; 
+            color: var(--text-main); 
+            font-size: 0.95rem; 
+            background: #edf2f7; 
+            padding: 8px 16px; 
+            border-radius: 8px;
+        }
+        .btn-nav { 
+            background: #fff; 
+            color: #4a5568; 
+            border: 1px solid #cbd5e0; 
+            box-shadow: none; 
+            padding: 8px 16px; 
+            font-size: 1.1rem; 
+            border-radius: 8px;
+            margin: 0;
+        }
+        .btn-nav:hover:not(:disabled) { 
+            background: #f7fafc; 
+            transform: translateY(-1px); 
+            border-color: #a0aec0; 
+            box-shadow: var(--card-shadow); 
+        }
+        .btn-nav:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
         
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: #2d3748; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); font-weight: 600; font-size: 0.9rem; animation: slideIn 0.3s forwards, fadeOut 0.3s 3.7s forwards; min-width: 240px; border-left: 4px solid #fff; }
@@ -302,12 +335,10 @@
 </header>
 
 <main>
-    <!-- BOTÓN ATRACTIVO PARA MOSTRAR LA MODAL -->
     <div style="text-align: center; margin-bottom: 25px;">
         <button id="openModalBtn" style="background: var(--primary-dark); font-size: 1.1rem; padding: 14px 36px; border-radius: 50px;">✨ ¡Publicar Grupo o Canal Gratis! ✨</button>
     </div>
 
-    <!-- VENTANA EMERGENTE (MODAL) OCULTA -->
     <div id="publishModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" id="closeModalBtn">&times;</span>
@@ -376,7 +407,6 @@
     <section id="buscar" class="grid-section">
         <h2 class="section-title">🔍 Explorar Directorio de Enlaces</h2>
 
-        <!-- FILTRO DE TIPO DE ENLACES (TODOS / GRUPOS / CANALES) -->
         <div class="type-selector-container">
             <button class="type-btn active" data-type="Todos">Todos ✨</button>
             <button class="type-btn" data-type="Grupo">Grupos 👥</button>
@@ -414,8 +444,11 @@
         <div class="grid" id="groupsContainer">
             <p>Cargando los grupos del directorio...</p>
         </div>
+        
         <div class="pagination-container" id="paginationBox" style="display: none;">
-            <button id="loadMoreBtn" class="btn-secondary">Cargar más resultados</button>
+            <button id="prevBtn" class="btn-nav btn-secondary">&lt;</button>
+            <span id="pageIndicator" class="pagination-info">Página 1 de 1</span>
+            <button id="nextBtn" class="btn-nav btn-secondary">&gt;</button>
         </div>
     </section>
 
@@ -456,7 +489,8 @@
     const SUPABASE_KEY = "sb_publishable_dnNC6D5JqzVGE51jkL3EDg_Mb_McOtL";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let itemsPorPagina = 12;
+    // CAMBIADO A 5 ELEMENTOS POR PÁGINA SEGÚN TU SOLICITUD
+    let itemsPorPagina = 5;
     let paginaActual = 0;
     let totalGruposCargados = [];
     let gruposFiltrados = []; 
@@ -537,10 +571,8 @@
 
         gruposFiltrados = totalGruposCargados.filter(grupo => {
             const enlaceUrl = grupo.enlace.toLowerCase();
-            // Determinar tipo real del registro basado en su URL almacenada
             const esCanal = enlaceUrl.includes("channel/");
             
-            // Filtro por tipo superior (Todos / Grupo / Canal)
             let coincideTipo = true;
             if (tipoFiltroActual === "Grupo") coincideTipo = !esCanal;
             if (tipoFiltroActual === "Canal") coincideTipo = esCanal;
@@ -553,15 +585,15 @@
             return coincideTipo && coincideBusqueda && coincideCategoria && coincidePais;
         });
 
-        paginaActual = 0;
-        renderizarBloqueGrupos(true);
+        paginaActual = 0; // Reiniciar a la primera página cuando se busca o filtra
+        renderizarBloqueGrupos();
     }
 
-    function renderizarBloqueGrupos(reiniciar = false) {
+    function renderizarBloqueGrupos() {
         const container = document.getElementById('groupsContainer');
         const paginationBox = document.getElementById('paginationBox');
         
-        if (reiniciar) container.innerHTML = "";
+        container.innerHTML = ""; // Limpiar siempre para la paginación tradicional
 
         if (gruposFiltrados.length === 0) {
             container.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;'>No se encontraron resultados que coincidan con los filtros aplicados.</p>";
@@ -569,6 +601,7 @@
             return;
         }
 
+        // Calcular el índice de inicio y fin de la página actual
         const inicio = paginaActual * itemsPorPagina;
         const fin = inicio + itemsPorPagina;
         const segmento = gruposFiltrados.slice(inicio, fin);
@@ -577,7 +610,6 @@
             const card = document.createElement('div');
             card.className = 'card';
             
-            // Detectar dinámicamente el tipo para renderizar la tarjeta
             const esCanal = grupo.enlace.toLowerCase().includes("channel/");
             const txtTipo = esCanal ? "📢 Canal" : "👥 Grupo";
             const txtBtnUnirse = esCanal ? "Seguir Canal" : "Unirse";
@@ -597,8 +629,16 @@
             container.appendChild(card);
         });
 
-        if (gruposFiltrados.length > fin) {
-            paginationBox.style.display = 'block';
+        // CONTROL Y ACTUALIZACIÓN DE LA BOTONERA DE PAGINACIÓN
+        const totalPaginas = Math.ceil(gruposFiltrados.length / itemsPorPagina);
+        
+        if (totalPaginas > 1) {
+            paginationBox.style.display = 'flex';
+            document.getElementById('pageIndicator').innerText = `Página ${paginaActual + 1} de ${totalPaginas}`;
+            
+            // Habilitar o deshabilitar botones según la posición
+            document.getElementById('prevBtn').disabled = (paginaActual === 0);
+            document.getElementById('nextBtn').disabled = (paginaActual === totalPaginas - 1);
         } else {
             paginationBox.style.display = 'none';
         }
@@ -614,9 +654,22 @@
         });
     });
 
-    document.getElementById('loadMoreBtn').addEventListener('click', () => {
-        paginaActual++;
-        renderizarBloqueGrupos(false);
+    // EVENTOS DE LOS NUEVOS BOTONES DE PAGINACIÓN (< y >)
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (paginaActual > 0) {
+            paginaActual--;
+            renderizarBloqueGrupos();
+            document.getElementById('buscar').scrollIntoView({ behavior: 'smooth' }); // Sube suavemente a los resultados
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        const totalPaginas = Math.ceil(gruposFiltrados.length / itemsPorPagina);
+        if (paginaActual < totalPaginas - 1) {
+            paginaActual++;
+            renderizarBloqueGrupos();
+            document.getElementById('buscar').scrollIntoView({ behavior: 'smooth' }); // Sube suavemente a los resultados
+        }
     });
 
     document.getElementById('searchBar').addEventListener('input', filtrarYRenderizar);
@@ -633,7 +686,6 @@
         const pais = document.getElementById('pais').value;
         const descripcion = document.getElementById('descripcion').value;
 
-        // Validar que sea un enlace válido de WhatsApp (Grupo o Canal)
         const esGrupoValido = enlace.includes('chat.whatsapp.com/');
         const esCanalValido = enlace.includes('whatsapp.com/channel/');
 
@@ -661,7 +713,6 @@
                 return;
             }
 
-            // Inserción directa manteniendo tu estructura actual de base de datos
             const { error: errorInsert } = await _supabase
                 .from('grupos')
                 .insert([{ titulo, enlace, categoria: category, pais, descripcion }]);
@@ -691,7 +742,6 @@
     cargarGrupos();
 </script>
 
-<!-- Carga optimizada de la Social Bar menos invasiva -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
@@ -699,7 +749,7 @@
           nuevoAd.src = "https://pl29622970.effectivecpmnetwork.com/d7/4f/91/d74f918fc14ab31dd1931d174e216287.js";
           nuevoAd.type = "text/javascript";
           document.body.appendChild(nuevoAd);
-      }, 1500); // Aparece 1.5 segundos después de que cargue la web
+      }, 1500);
   });
 </script>
 
