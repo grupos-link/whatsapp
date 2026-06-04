@@ -6,6 +6,9 @@
     <title>Links de Grupos de WhatsApp 2026 - Directorio de Enlaces para Unirse</title>
     <meta name="description" content="Encuentra y únete a los mejores grupos de WhatsApp activos. Directorio gratuito organizado por categorías y países. ¡Publica tu enlace de grupo gratis hoy!">
     <meta name="google-site-verification" content="7psMNXqApwX_Qj4QvGC6Q0eI_LbmjnTE2ITxYajCbmQ" />
+    
+    <link rel="canonical" href="https://grupos-link.github.io/whatsapp/" />
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root { 
@@ -60,6 +63,9 @@
         
         .section-title { color: #1a202c; border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 25px; font-size: 1.45rem; font-weight: 800; display: inline-block; }
         
+        /* Estilo adaptado para el título del modal sin interferir en la jerarquía h2 de SEO */
+        .modal-title-style { color: #1a202c; border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-bottom: 25px; font-size: 1.45rem; font-weight: 800; display: inline-block; }
+
         .form-section, .grid-section, .seo-section { 
             background: #ffffff; 
             padding: 30px; 
@@ -69,7 +75,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* ESTILOS DE LA VENTANA MODAL EMERGENTE */
         .modal {
             display: none;
             position: fixed;
@@ -110,7 +115,6 @@
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* BOTONES FLOTANTES Y SELECTORES DE TIPO DE ENLACE */
         .type-selector-container {
             display: flex;
             justify-content: center;
@@ -134,7 +138,6 @@
             box-shadow: 0 4px 10px rgba(18, 140, 126, 0.25);
         }
         
-        /* Sistema de Filtros Avanzado e Intuitivo */
         .filter-container {
             display: flex;
             flex-wrap: wrap;
@@ -149,12 +152,10 @@
         .filter-container select { flex: 1; min-width: 160px; }
         
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-        .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
-        .form-group.full-width { grid-column: span 1; }
-        @media (min-width: 600px) { .form-group.full-width { grid-column: auto / span 2; } }
+        .form-grid-group { display: flex; flex-direction: column; margin-bottom: 15px; }
         
-        .form-group label { margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: #4a5568; }
-        .form-group input, .form-group select, .form-group textarea, .filter-container input, .filter-container select { 
+        .form-grid-group label { margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: #4a5568; }
+        .form-grid-group input, .form-grid-group select, .form-grid-group textarea, .filter-container input, .filter-container select { 
             padding: 12px 14px; 
             border: 1px solid #cbd5e0; 
             border-radius: 10px; 
@@ -163,7 +164,7 @@
             background-color: #fff;
             color: var(--text-main);
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus, .filter-container input:focus, .filter-container select:focus {
+        .form-grid-group input:focus, .form-grid-group select:focus, .form-grid-group textarea:focus, .filter-container input:focus, .filter-container select:focus {
             border-color: var(--primary-dark);
             box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.1);
             outline: none;
@@ -185,7 +186,6 @@
         button:hover { background: #20ba5a; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3); }
         button:disabled { background: #a0aec0; cursor: not-allowed; transform: none; box-shadow: none; }
         
-        /* AJUSTES PROFESIONALES DE TARJETAS (MÁS COMPACTAS Y JUNTAS) */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-top: 25px; }
         
         .card { 
@@ -230,7 +230,6 @@
         .btn-join:hover { background: var(--primary-dark); color: white; border-color: var(--primary-dark); }
         .btn-join::before { content: "💬 "; margin-right: 4px; }
 
-        /* ESTILOS NUEVOS PARA LA PAGINACIÓN PROFESIONAL */
         .pagination-container { 
             display: flex; 
             align-items: center; 
@@ -281,9 +280,6 @@
         .faq-item p { margin: 0; color: var(--text-muted); font-size: 0.92rem; }
         footer { background: #ffffff; color: var(--text-muted); text-align: center; padding: 30px 20px; font-size: 0.85rem; margin-top: 50px; border-top: 1px solid var(--border-color); }
 
-        /* =======================================================
-           MÓDULO RESPONSIVO PARA DISPOSITIVOS MÓVILES (CELULARES)
-           ======================================================= */
         @media (max-width: 500px) {
             header { padding: 25px 15px; }
             header h1 { font-size: 1.75rem; }
@@ -342,18 +338,18 @@
     <div id="publishModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" id="closeModalBtn">&times;</span>
-            <h2 class="section-title" id="modalTitle" style="margin-top: 10px;">Publica tu Grupo de WhatsApp</h2>
+            <div class="modal-title-style" id="modalTitle" style="margin-top: 10px;">Publica tu Grupo de WhatsApp</div>
             <form id="groupForm">
                 <div class="form-grid">
-                    <div class="form-group">
+                    <div class="form-grid-group">
                         <label id="lblTitulo" for="titulo">Nombre del Grupo</label>
                         <input type="text" id="titulo" required placeholder="Ej: Gamers de Latinoamérica">
                     </div>
-                    <div class="form-group">
+                    <div class="form-grid-group">
                         <label id="lblEnlace" for="enlace">Enlace de Invitación / Canal</label>
                         <input type="url" id="enlace" required placeholder="https://chat.whatsapp.com/... o https://whatsapp.com/channel/...">
                     </div>
-                    <div class="form-group">
+                    <div class="form-grid-group">
                         <label id="lblCategoria" for="categoria">Categoría</label>
                         <select id="categoria">
                             <option value="Amistad">Amistad / Amigos</option>
@@ -366,7 +362,7 @@
                             <option value="Otros">Otros Temas</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-grid-group">
                         <label id="lblPais" for="pais">País de la Comunidad</label>
                         <select id="pais" required>
                             <option value="" disabled selected>Selecciona un país...</option>
@@ -395,7 +391,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group full-width" style="margin-top: 15px;">
+                <div class="form-grid-group" style="margin-top: 15px;">
                     <label id="lblDescripcion" for="descripcion">Descripción (Ayuda al SEO)</label>
                     <textarea id="descripcion" rows="3" placeholder="Describe brevemente las reglas o de qué temas hablan para atraer a miembros interesados..."></textarea>
                 </div>
@@ -456,55 +452,51 @@
             </select>
         </div>
 
-            <div class="grid" id="groupsContainer">
-        <!-- 1. Tarjeta SEO de Respaldo: Videojuegos / Free Fire -->
-        <div class="card seo-placeholder">
-            <div>
-                <h3>Links de Grupos de WhatsApp de Free Fire</h3>
-                <div class="badges-wrapper">
-                    <span class="badge tipo">👥 Grupo</span>
-                    <span class="badge">📁 Videojuegos</span>
-                    <span class="badge geo">📍 Internacional</span>
+        <div class="grid" id="groupsContainer">
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Links de Grupos de WhatsApp de Free Fire</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">👥 Grupo</span>
+                        <span class="badge">📁 Videojuegos</span>
+                        <span class="badge geo">📍 Internacional</span>
+                    </div>
+                    <p>Únete a los mejores grupos de WhatsApp de Free Fire activos. Encuentra escuadras, salas, códigos actualizados y comunidad gaming en LATAM y España.</p>
                 </div>
-                <p>Únete a los mejores grupos de WhatsApp de Free Fire activos. Encuentra escuadras, salas, códigos actualizados y comunidad gaming en LATAM y España.</p>
+                <a href="#buscar" class="btn-join">Unirse</a>
             </div>
-            <a href="#buscar" class="btn-join">Unirse</a>
+
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Comunidades y Canales de Anime y Manga</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">📢 Canal</span>
+                        <span class="badge">📁 Anime</span>
+                        <span class="badge geo">📍 Internacional</span>
+                    </div>
+                    <p>Directorio de enlaces para unirse a canales de WhatsApp de anime, debates de manga, recomendación de series, memes y fondos de pantalla otakus.</p>
+                </div>
+                <a href="#buscar" class="btn-join">Seguir Canal</a>
+            </div>
+
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Grupos de WhatsApp para Hacer Amigos y Ligar</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">👥 Grupo</span>
+                        <span class="badge">📁 Amistad</span>
+                        <span class="badge geo">📍 México</span>
+                    </div>
+                    <p>Entra a salas de chat públicas para conocer gente nueva de tu país, hacer amigos online, compartir frases, estados y chatear de forma segura.</p>
+                </div>
+                <a href="#buscar" class="btn-join">Unirse</a>
+            </div>
         </div>
 
-        <!-- 2. Tarjeta SEO de Respaldo: Anime -->
-        <div class="card seo-placeholder">
-            <div>
-                <h3>Comunidades y Canales de Anime y Manga</h3>
-                <div class="badges-wrapper">
-                    <span class="badge tipo">📢 Canal</span>
-                    <span class="badge">📁 Anime</span>
-                    <span class="badge geo">📍 Internacional</span>
-                </div>
-                <p>Directorio de enlaces para unirse a canales de WhatsApp de anime, debates de manga, recomendación de series, memes y fondos de pantalla otakus.</p>
-            </div>
-            <a href="#buscar" class="btn-join">Seguir Canal</a>
-        </div>
-
-        <!-- 3. Tarjeta SEO de Respaldo: Amistad -->
-        <div class="card seo-placeholder">
-            <div>
-                <h3>Grupos de WhatsApp para Hacer Amigos y Ligar</h3>
-                <div class="badges-wrapper">
-                    <span class="badge tipo">👥 Grupo</span>
-                    <span class="badge">📁 Amistad</span>
-                    <span class="badge geo">📍 México</span>
-                </div>
-                <p>Entra a salas de chat públicas para conocer gente nueva de tu país, hacer amigos online, compartir frases, estados y chatear de forma segura.</p>
-            </div>
-            <a href="#buscar" class="btn-join">Unirse</a>
-        </div>
-    </div>
-
-        
         <div class="pagination-container" id="paginationBox" style="display: none;">
-            <button id="prevBtn" class="btn-nav btn-secondary">&lt;</button>
+            <button id="prevBtn" class="btn-nav">&lt;</button>
             <span id="pageIndicator" class="pagination-info">Página 1 de 1</span>
-            <button id="nextBtn" class="btn-nav btn-secondary">&gt;</button>
+            <button id="nextBtn" class="btn-nav">&gt;</button>
         </div>
     </section>
 
@@ -548,9 +540,8 @@
     let itemsPorPagina = 5;
     let paginaActual = 0;
     let tipoFiltroActual = "Todos"; 
-    let totalItemsFiltrados = 0; // Almacena el total absoluto según los filtros
+    let totalItemsFiltrados = 0;
 
-    // LOGICA DE LA MODAL EMERGENTE
     const modal = document.getElementById("publishModal");
     const openBtn = document.getElementById("openModalBtn");
     const openNav = document.getElementById("openModalNav");
@@ -564,7 +555,6 @@
     closeBtn.addEventListener("click", cerrarModal);
     window.addEventListener("click", (e) => { if (e.target === modal) cerrarModal(); });
 
-    // DETECCIÓN DINÁMICA DE TIPO SEGÚN EL ENLACE
     const enlaceInput = document.getElementById("enlace");
     enlaceInput.addEventListener("input", () => {
         const url = enlaceInput.value.toLowerCase().trim();
@@ -592,21 +582,21 @@
         setTimeout(() => toast.remove(), 4000);
     }
 
-    // NUEVA FUNCIÓN PRINCIPAL OPTIMIZADA DESDE EL SERVIDOR
     async function cargarGrupos() {
         const container = document.getElementById('groupsContainer');
         const paginationBox = document.getElementById('paginationBox');
+
+        // MEJORA DE UX: Feedback visual de carga antes de la respuesta de Supabase
+        container.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;'>Cargando comunidades activas...</p>";
 
         const query = document.getElementById('searchBar').value.toLowerCase().trim();
         const categorySelect = document.getElementById('filterCategoria').value;
         const paisSelect = document.getElementById('filterPais').value;
 
-        // 1. Iniciamos la consulta base pidiendo conteo exacto
         let consulta = _supabase
             .from('grupos')
             .select('*', { count: 'exact' });
 
-        // 2. Aplicar filtros dinámicos en el servidor de Supabase
         if (tipoFiltroActual === "Grupo") {
             consulta = consulta.not('enlace', 'ilike', '%channel/%');
         } else if (tipoFiltroActual === "Canal") {
@@ -622,11 +612,9 @@
         }
 
         if (query !== "") {
-            // Buscador por título o descripción directamente en la BD
             consulta = consulta.or(`titulo.ilike.%${query}%,descripcion.ilike.%${query}%`);
         }
 
-        // 3. Aplicar paginación limpia desde el servidor (Rango exacto de 5 registros)
         const desde = paginaActual * itemsPorPagina;
         const hasta = desde + itemsPorPagina - 1;
 
@@ -635,7 +623,7 @@
             .range(desde, hasta);
 
         if (error) {
-            container.innerHTML = "<p>Error al conectar con el servidor.</p>";
+            container.innerHTML = "<p style='grid-column: 1 / -1; text-align: center; color: var(--danger);'>Error al conectar con el servidor.</p>";
             console.error(error);
             return;
         }
@@ -648,7 +636,6 @@
             return;
         }
 
-        // 4. Renderizar el segmento exacto devuelto por Supabase
         container.innerHTML = "";
         grupos.forEach(grupo => {
             const card = document.createElement('div');
@@ -673,7 +660,6 @@
             container.appendChild(card);
         });
 
-        // 5. Controlar la interfaz de la botonera de paginación
         const totalPaginas = Math.ceil(totalItemsFiltrados / itemsPorPagina);
         
         if (totalPaginas > 1) {
@@ -687,11 +673,10 @@
     }
 
     function alCambiarFiltro() {
-        paginaActual = 0; // Resetea a la primera página ante cualquier nueva búsqueda o cambio
+        paginaActual = 0; 
         cargarGrupos();
     }
 
-    // MANEJO DE SELECCIÓN DE TIPO SUPERIOR
     document.querySelectorAll('.type-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
@@ -701,7 +686,6 @@
         });
     });
 
-    // EVENTOS DE LOS BOTONES DE PAGINACIÓN (< y >)
     document.getElementById('prevBtn').addEventListener('click', () => {
         if (paginaActual > 0) {
             paginaActual--;
@@ -719,7 +703,6 @@
         }
     });
 
-    // Filtros por botón/Enter o por cambios de los selectores directos
     document.getElementById('btnBuscar').addEventListener('click', alCambiarFiltro);
     document.getElementById('searchBar').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') alCambiarFiltro();
@@ -732,7 +715,6 @@
         
         const submitBtn = document.getElementById('submitBtn');
         const titulo = document.getElementById('titulo').value;
-        // Limpieza robusta del enlace removiendo espacios y barras diagonales finales redundantes
         const enlace = document.getElementById('enlace').value.trim().replace(/[\s/]+$/, '');
         const category = document.getElementById('categoria').value;
         const pais = document.getElementById('pais').value;
@@ -791,7 +773,6 @@
         );
     }
 
-    // Carga inicial al entrar al sitio
     cargarGrupos();
 </script>
 
