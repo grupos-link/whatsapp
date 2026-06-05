@@ -537,7 +537,7 @@
     const SUPABASE_KEY = "sb_publishable_dnNC6D5JqzVGE51jkL3EDg_Mb_McOtL";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let itemsPorPagina = 5;
+    let itemsPorPagina = window.innerWidth < 768 ? 5 : 12;
     let paginaActual = 0;
     let tipoFiltroActual = "Todos"; 
     let totalItemsFiltrados = 0;
