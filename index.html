@@ -7,8 +7,7 @@
     <meta name="description" content="Encuentra y únete a los mejores grupos de WhatsApp activos. Directorio gratuito organizado por categorías y países. ¡Publica tu enlace de grupo gratis hoy!">
     <meta name="google-site-verification" content="7psMNXqApwX_Qj4QvGC6Q0eI_LbmjnTE2ITxYajCbmQ" />
 
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MN0QWFYX11"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MN0QWFYX11"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -325,6 +324,27 @@
           "@type": "Answer",
           "text": "Es 100% gratuito. Solo debes pulsar el botón de Publicar Enlace y rellenar los datos de tu comunidad o canal."
         }
+      }, {
+        "@type": "Question",
+        "name": "¿Qué categorías de grupos de WhatsApp puedo encontrar aquí?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nuestro índice recopila una gran variedad de enlaces activos organizados meticulosamente. Podrás unirte a grupos de WhatsApp de Free Fire, Minecraft, anime, manga, memes graciosos, frases de amor, amistad internacional, salas de chat para ligar, y comunidades de apoyo para estudios o emprendimientos."
+        }
+      }, {
+        "@type": "Question",
+        "name": "¿De qué países hay comunidades disponibles?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Contamos con enlaces de invitaciones estables para comunidades de múltiples regiones de habla hispana, incluyendo grupos enfocados en usuarios de México, Argentina, Colombia, Chile, Perú, España, Venezuela, Ecuador y Estados Unidos, además de opciones internacionales válidas para personas de todo el mundo."
+        }
+      }, {
+        "@type": "Question",
+        "name": "¿Cuál es el límite de miembros en los grupos?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Actualmente, la plataforma de WhatsApp permite que los grupos públicos y privados tengan un límite máximo de hasta 1024 miembros por sala de chat."
+        }
       }]
     }
     </script>
@@ -501,6 +521,71 @@
                 </div>
                 <a href="#buscar" class="btn-join">Unirse</a>
             </div>
+
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Enlaces de Grupos de WhatsApp de España</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">👥 Grupo</span>
+                        <span class="badge">📁 Amistad</span>
+                        <span class="badge geo">📍 España</span>
+                    </div>
+                    <p>Conéctate con salas de chat activas en España. Directorio de enlaces de invitaciones estables para comunidades de Madrid, Barcelona y más ciudades.</p>
+                </div>
+                <a href="#buscar" class="btn-join">Unirse</a>
+            </div>
+
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Links de Grupos de WhatsApp de Colombia</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">👥 Grupo</span>
+                        <span class="badge">📁 Otros Temas</span>
+                        <span class="badge geo">📍 Colombia</span>
+                    </div>
+                    <p>Entra a las mejores comunidades de WhatsApp en Colombia. Links de invitación actualizados para interactuar con personas de Bogotá, Medellín y Cali.</p>
+                </div>
+                <a href="#buscar" class="btn-join">Unirse</a>
+            </div>
+
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Grupos de WhatsApp de Argentina para Unirse</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">👥 Grupo</span>
+                        <span class="badge">📁 Amistad</span>
+                        <span class="badge geo">📍 Argentina</span>
+                    </div>
+                    <p>Catálogo de enlaces de grupos públicos enfocados en usuarios de Argentina. Comparte memes, haz amistades y únete a salas estables de forma abierta.</p>
+                </div>
+                <a href="#buscar" class="btn-join">Unirse</a>
+            </div>
+
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Canales de WhatsApp de Emprendimiento y Negocios</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">📢 Canal</span>
+                        <span class="badge">📁 Negocios</span>
+                        <span class="badge geo">📍 Internacional</span>
+                    </div>
+                    <p>Sigue canales oficiales de WhatsApp para recibir consejos de finanzas, ideas de negocios, marketing digital y tips de inversión totalmente gratis.</p>
+                </div>
+                <a href="#buscar" class="btn-join">Seguir Canal</a>
+            </div>
+
+            <div class="card seo-placeholder">
+                <div>
+                    <h3>Grupos para Ligar y Chat de Solteros</h3>
+                    <div class="badges-wrapper">
+                        <span class="badge tipo">👥 Grupo</span>
+                        <span class="badge">📁 Ligar</span>
+                        <span class="badge geo">📍 Internacional</span>
+                    </div>
+                    <p>Encuentra links de invitaciones a salas de chat públicas para conocer solteros, entablar conversaciones románticas y ligar de forma online y segura.</p>
+                </div>
+                <a href="#buscar" class="btn-join">Unirse</a>
+            </div>
         </div>
 
         <div class="pagination-container" id="paginationBox" style="display: none;">
@@ -665,7 +750,7 @@
                     </div>
                     <p>${escaparHTML(grupo.descripcion || 'Sin descripción disponible.')}</p>
                 </div>
-                <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener" class="btn-join">${txtBtnUnirse}</a>
+                <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener noreferrer" class="btn-join">${txtBtnUnirse}</a>
             `;
             container.appendChild(card);
         });
