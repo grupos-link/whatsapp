@@ -288,7 +288,8 @@
             .form-section, .grid-section, .seo-section { padding: 20px; border-radius: 16px; }
             .grid { gap: 12px; margin-top: 15px; }
             .card { padding: 16px; border-radius: 12px; }
-            .card p { display: -webkit-box; -webkit-line-clamp: 2; min-height: auto; margin-bottom: 15px; }
+            .card p { display: none; }
+            .badges-wrapper { margin-bottom: 8px; }
         }
     </style>
     
@@ -671,7 +672,6 @@
                         <span class="badge">📁 ${escaparHTML(grupo.categoria)}</span>
                         <span class="badge geo">📍 ${escaparHTML(grupo.pais)}</span>
                     </div>
-                    <p>${escaparHTML(grupo.descripcion || 'Únete a esta comunidad para interactuar con otros miembros con tus mismos intereses.')}</p>
                 </div>
                 <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener noreferrer" class="btn-join">${txtBtnUnirse}</a>
             `;
