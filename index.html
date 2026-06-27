@@ -281,15 +281,21 @@
             .filter-container { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
         }
 
+        /* LÓGICA DE FILAS DE GRUPOS EN MÓVIL INCORPORADA DEL SEGUNDO CÓDIGO */
         @media (max-width: 500px) {
             header { padding: 30px 15px; }
             header h1 { font-size: 1.85rem; }
             main { margin: 20px auto; }
             .form-section, .grid-section, .seo-section { padding: 20px; border-radius: 16px; }
-            .grid { gap: 12px; margin-top: 15px; }
-            .card { padding: 16px; border-radius: 12px; }
+            
+            .grid { gap: 10px; margin-top: 15px; }
+            .card { padding: 12px; flex-direction: row; align-items: center; gap: 12px; border-radius: 10px; }
+            .card > div:first-child { flex: 1; min-width: 0; }
+            .card h3 { font-size: 1rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .card p { display: none; }
-            .badges-wrapper { margin-bottom: 8px; }
+            .badges-wrapper { margin-bottom: 0; gap: 4px; }
+            .badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; }
+            .btn-join { padding: 8px 12px; font-size: 0.8rem; white-space: nowrap; margin-top: 0; border-radius: 6px; }
         }
     </style>
     
@@ -657,6 +663,7 @@
 
         container.innerHTML = "";
         grupos.forEach(grupo => {
+            // Lógica unificada para renderizar las tarjetas inyectadas dinámicamente con las clases correctas
             const card = document.createElement('article');
             card.className = 'card';
             
@@ -672,6 +679,7 @@
                         <span class="badge">📁 ${escaparHTML(grupo.categoria)}</span>
                         <span class="badge geo">📍 ${escaparHTML(grupo.pais)}</span>
                     </div>
+                    <p>${escaparHTML(grupo.descripcion || 'Sin descripción disponible.')}</p>
                 </div>
                 <a href="${grupo.enlace}" target="_blank" rel="nofollow noopener noreferrer" class="btn-join">${txtBtnUnirse}</a>
             `;
