@@ -105,6 +105,7 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.15);
             animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             border: 1px solid var(--border-color);
+            box-sizing: border-box;
         }
         .close-modal {
             position: absolute;
@@ -127,6 +128,7 @@
             justify-content: center;
             gap: 10px;
             margin-bottom: 25px;
+            flex-wrap: wrap;
         }
         .type-btn {
             background: #edf2f7;
@@ -154,13 +156,20 @@
             padding: 20px;
             border-radius: 14px;
             border: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 8px;
+            width: 100%;
         }
         
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
         .form-grid-group { display: flex; flex-direction: column; margin-bottom: 15px; }
         .form-grid-group label { margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: #4a5568; }
         
-        .form-grid-group input, .form-grid-group select, .form-grid-group textarea, .filter-container input, .filter-container select { 
+        .form-grid-group input, .form-grid-group select, .form-grid-group textarea, .filter-container select, .search-wrapper input { 
             padding: 12px 16px; 
             border: 1px solid #cbd5e0; 
             border-radius: 12px; 
@@ -168,8 +177,10 @@
             transition: all 0.2s ease;
             background-color: #fff;
             color: var(--text-main);
+            width: 100%;
+            box-sizing: border-box;
         }
-        .form-grid-group input:focus, .form-grid-group select:focus, .form-grid-group textarea:focus, .filter-container input:focus, .filter-container select:focus {
+        .form-grid-group input:focus, .form-grid-group select:focus, .form-grid-group textarea:focus, .filter-container select:focus, .search-wrapper input:focus {
             border-color: var(--primary-dark);
             box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.15);
             outline: none;
@@ -202,6 +213,7 @@
             background: #ffffff; 
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: var(--card-shadow);
+            box-sizing: border-box;
         }
         .card:hover { 
             transform: translateY(-4px); 
@@ -278,7 +290,7 @@
         footer { background: #ffffff; color: var(--text-muted); text-align: center; padding: 40px 20px; font-size: 0.9rem; margin-top: 60px; border-top: 1px solid var(--border-color); }
 
         @media (max-width: 768px) {
-            .filter-container { grid-template-columns: 1fr; gap: 10px; padding: 12px; }
+            .filter-container { grid-template-columns: 1fr; gap: 12px; padding: 15px; }
         }
 
         /* LÓGICA DE FILAS DE GRUPOS EN MÓVIL INCORPORADA DEL SEGUNDO CÓDIGO */
@@ -287,6 +299,7 @@
             header h1 { font-size: 1.85rem; }
             main { margin: 20px auto; }
             .form-section, .grid-section, .seo-section { padding: 20px; border-radius: 16px; }
+            .modal-content { padding: 20px; margin: 10% auto; width: 95%; }
             
             .grid { gap: 10px; margin-top: 15px; }
             .card { padding: 12px; flex-direction: row; align-items: center; gap: 12px; border-radius: 10px; }
@@ -433,9 +446,9 @@
         </div>
         
         <div class="filter-container">
-            <div style="display: flex; gap: 8px;">
-                <input type="text" id="searchBar" placeholder="Buscar por palabra clave (Ej: Free Fire, Anime)..." style="flex: 1; margin: 0;">
-                <button id="btnBuscar" type="button" style="margin: 0; padding: 0 22px; display: flex; align-items: center; justify-content: center;">🔍</button>
+            <div class="search-wrapper">
+                <input type="text" id="searchBar" placeholder="Buscar por palabra clave (Ej: Free Fire, Anime)...">
+                <button id="btnBuscar" type="button" style="padding: 0 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">🔍</button>
             </div>
             <select id="filterCategoria">
                 <option value="Todos">Todas las Categorías</option>
